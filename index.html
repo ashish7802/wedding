@@ -13,16 +13,17 @@
     }
   } catch (e) {}
 
-  const OSM_MAP_URL = 'https://www.openstreetmap.org/export/embed.html?bbox=80.9200%2C26.7580%2C80.9650%2C26.7900&layer=mapnik&marker=26.7750%2C80.9420';
+  const EXACT_MAP_LINK = 'https://maps.app.goo.gl/775D5bTizAvwEypB9';
+  const GOOGLE_EMBED_URL = 'https://maps.google.com/maps?q=Kalyan+Lawn,+Police+Chowki,+Raebareli+Rd,+opposite+South+City,+New+Defence+Colony,+Lucknow,+Uttar+Pradesh+226029&hl=en&z=16&output=embed';
 
-  // 1. Prototype Setter Interceptor
+  // 1. Prototype Setter Interceptor (only replaces restricted v1/AIzaSy URLs)
   try {
     const originalSrcDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
     if (originalSrcDesc && originalSrcDesc.set) {
       Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
         set: function(val) {
-          if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1') || val.includes('google.com/maps/embed'))) {
-            val = OSM_MAP_URL;
+          if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1'))) {
+            val = GOOGLE_EMBED_URL;
           }
           return originalSrcDesc.set.call(this, val);
         },
@@ -36,8 +37,8 @@
     const originalSetAttr = Element.prototype.setAttribute;
     Element.prototype.setAttribute = function(name, val) {
       if (this instanceof HTMLIFrameElement && typeof name === 'string' && name.toLowerCase() === 'src') {
-        if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1') || val.includes('google.com/maps/embed'))) {
-          val = OSM_MAP_URL;
+        if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1'))) {
+          val = GOOGLE_EMBED_URL;
         }
       }
       return originalSetAttr.call(this, name, val);
@@ -76,8 +77,8 @@
     const iframes = document.querySelectorAll('iframe');
     iframes.forEach(iframe => {
       const src = iframe.getAttribute('src') || iframe.src || '';
-      if (src.includes('AIzaSy') || src.includes('maps/embed/v1') || src.includes('google.com/maps/embed')) {
-        iframe.src = OSM_MAP_URL;
+      if (src.includes('AIzaSy') || src.includes('maps/embed/v1')) {
+        iframe.src = GOOGLE_EMBED_URL;
       }
     });
 
@@ -99,11 +100,11 @@
               Lucknow, Uttar Pradesh 226029
             </div>
             <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px;">
-              <a href="https://maps.app.goo.gl/hXb3bEkSL3GkvdFt7?g_st=iw" target="_blank" rel="noopener noreferrer"
+              <a href="${EXACT_MAP_LINK}" target="_blank" rel="noopener noreferrer"
                  style="background: linear-gradient(135deg, #ffd98a, #cca04a); color: #4a0206; font-weight: bold; padding: 8px 18px; border-radius: 9999px; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                 🗺️ Open in Google Maps
               </a>
-              <a href="https://www.google.com/maps/dir/?api=1&destination=Kalyan+Lawn+Raebareli+Road+Lucknow+Uttar+Pradesh+226029" target="_blank" rel="noopener noreferrer"
+              <a href="${EXACT_MAP_LINK}" target="_blank" rel="noopener noreferrer"
                  style="background: rgba(255,255,255,0.12); color: #ffd98a; border: 1px solid #ffd98a; font-weight: bold; padding: 8px 18px; border-radius: 9999px; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                 🚗 Get Driving Directions
               </a>
@@ -170,34 +171,34 @@
       </div>
 
       <!-- Envelope Card -->
-      <div style="z-index:10" class="jsx-353cb38c53e4a74a relative">
-        <div class="jsx-353cb38c53e4a74a relative w-[310px] sm:w-[340px] md:w-[520px] lg:w-[600px]" id="envelope-card-wrapper" style="transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease;">
-          <div style="top:50px;width:56px;height:56px;transform:translate(-50%, -50%);background:radial-gradient(circle at 30% 30%, #f2c06e, rgb(212, 162, 80));--shadow-color:rgba(242, 192, 110, 0.5);box-shadow:0 4px 20px rgba(242, 192, 110, 0.5), inset 0 2px 4px rgba(255,255,255,0.3);z-index:30;animation:seal-pulse 2s ease-in-out infinite" class="jsx-353cb38c53e4a74a absolute left-1/2 rounded-full flex items-center justify-center">
+      <div style="z-index:10" class="jsx-353cb38c53e4a74a relative px-3 w-full flex justify-center">
+        <div class="jsx-353cb38c53e4a74a relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[520px] lg:max-w-[580px]" id="envelope-card-wrapper" style="transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease;">
+          <div style="top:44px;width:54px;height:54px;transform:translate(-50%, -50%);background:radial-gradient(circle at 30% 30%, #f2c06e, rgb(212, 162, 80));--shadow-color:rgba(242, 192, 110, 0.5);box-shadow:0 4px 20px rgba(242, 192, 110, 0.5), inset 0 2px 4px rgba(255,255,255,0.3);z-index:30;animation:seal-pulse 2s ease-in-out infinite" class="jsx-353cb38c53e4a74a absolute left-1/2 rounded-full flex items-center justify-center">
             <svg style="fill:#764c4d" viewBox="0 0 24 24" class="jsx-353cb38c53e4a74a w-7 h-7"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" class="jsx-353cb38c53e4a74a"></path></svg>
           </div>
-          <div style="box-shadow:0 25px 60px -12px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 40px rgba(242, 192, 110, 0.15)" class="jsx-353cb38c53e4a74a relative rounded-lg">
-            <div style="background:rgba(107, 5, 8, 0.97);border:1px solid rgba(242, 192, 110, 0.15);clip-path:inset(0 round 8px)" class="jsx-353cb38c53e4a74a absolute inset-0 rounded-lg overflow-hidden">
+          <div style="box-shadow:0 25px 60px -12px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 40px rgba(242, 192, 110, 0.15)" class="jsx-353cb38c53e4a74a relative rounded-xl">
+            <div style="background:rgba(107, 5, 8, 0.97);border:1px solid rgba(242, 192, 110, 0.22);clip-path:inset(0 round 12px)" class="jsx-353cb38c53e4a74a absolute inset-0 rounded-xl overflow-hidden">
               <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="jsx-353cb38c53e4a74a absolute pointer-events-none h-150 md:h-150 lg:h-150 w-auto max-w-none top-[-13%] left-[-24px] md:left-[-24px] -scale-x-100 -translate-x-[6%] md:-translate-x-[10%] opacity-15"/>
               <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="jsx-353cb38c53e4a74a absolute pointer-events-none h-150 md:h-150 lg:h-150 w-auto max-w-none top-[-13%] right-[-24px] md:right-[-24px] translate-x-[6%] md:translate-x-[10%] opacity-15 scale-x-100"/>
             </div>
-            <div class="jsx-353cb38c53e4a74a relative z-10 text-center px-6 pt-28 pb-14 md:pt-24 md:pb-8">
-              <h1 style="color:#f2c06e;font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive" class="jsx-353cb38c53e4a74a mb-2 flex flex-col items-center leading-tight text-3xl sm:text-4xl">
-                <span style="font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;font-size:30px" class="jsx-353cb38c53e4a74a block w-full text-center">Dr.Shubhanil</span>
-                <span style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive" class="jsx-353cb38c53e4a74a block w-full text-center text-lg leading-none sm:text-xl">&amp;</span>
-                <span style="font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;font-size:30px" class="jsx-353cb38c53e4a74a block w-full text-center">Dr.Nidhi</span>
+            <div class="jsx-353cb38c53e4a74a relative z-10 text-center px-5 sm:px-8 pt-24 pb-10 sm:pt-26 sm:pb-12 md:pt-24 md:pb-10">
+              <h1 style="color:#f2c06e;font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive" class="jsx-353cb38c53e4a74a mb-2 flex flex-col items-center leading-tight">
+                <span style="font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;font-size:clamp(26px, 6.5vw, 38px)" class="jsx-353cb38c53e4a74a block w-full text-center">Dr.Shubhanil</span>
+                <span style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive;font-size:clamp(18px, 4.5vw, 24px)" class="jsx-353cb38c53e4a74a block w-full text-center leading-none my-1">&amp;</span>
+                <span style="font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;font-size:clamp(26px, 6.5vw, 38px)" class="jsx-353cb38c53e4a74a block w-full text-center">Dr.Nidhi</span>
               </h1>
               <div class="jsx-353cb38c53e4a74a flex items-center justify-center gap-3 mb-2">
                 <div style="background:linear-gradient(to right, transparent, #f2c06e)" class="jsx-353cb38c53e4a74a w-10 h-px"></div>
                 <span style="color:#f2c06e;opacity:0.7" class="jsx-353cb38c53e4a74a text-sm">❦</span>
                 <div style="background:linear-gradient(to left, transparent, #f2c06e)" class="jsx-353cb38c53e4a74a w-10 h-px"></div>
               </div>
-              <div style="color:rgba(255, 223, 175, 0.9);font-family:&quot;Lora&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif" class="jsx-353cb38c53e4a74a text-[18px] mb-5 flex flex-col items-center">
+              <div style="color:rgba(255, 223, 175, 0.9);font-family:&quot;Lora&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;font-size:clamp(15px, 4vw, 19px)" class="jsx-353cb38c53e4a74a mb-4 flex flex-col items-center">
                 <span dir="auto">November 25, 2026</span>
               </div>
               <div class="jsx-353cb38c53e4a74a mb-6">
-                <p style="color:rgba(255, 223, 175, 0.9);font-family:&quot;Lora&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif" class="jsx-353cb38c53e4a74a text-[18px] font-light mb-2"><span dir="auto">Cordially Invites</span></p>
+                <p style="color:rgba(255, 223, 175, 0.9);font-family:&quot;Lora&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;font-size:clamp(15px, 4vw, 19px)" class="jsx-353cb38c53e4a74a font-light mb-2"><span dir="auto">Cordially Invites</span></p>
               </div>
-              <a href="/open" id="open-invitation-btn" rel="nofollow" aria-busy="false" style="background-color:#f2c06e;color:#764c4d;box-shadow:0 4px 14px rgba(242, 192, 110, 0.35);font-family:&quot;Lora&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none" class="jsx-353cb38c53e4a74a relative px-8 py-2.5 text-lg font-semibold sm:font-medium rounded-full shadow-lg no-underline cursor-pointer flex w-fit items-center justify-center mx-auto overflow-hidden transition-transform hover:scale-105">
+              <a href="/open" id="open-invitation-btn" rel="nofollow" aria-busy="false" style="background-color:#f2c06e;color:#764c4d;box-shadow:0 4px 14px rgba(242, 192, 110, 0.35);font-family:&quot;Lora&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;-webkit-touch-callout:none;-webkit-user-select:none;user-select:none" class="jsx-353cb38c53e4a74a relative px-9 py-2.5 text-base sm:text-lg font-semibold sm:font-medium rounded-full shadow-lg no-underline cursor-pointer flex w-fit items-center justify-center mx-auto overflow-hidden transition-transform hover:scale-105">
                 <span dir="auto">Open</span>
                 <div style="background:linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);animation:shine 3s ease-in-out infinite" class="jsx-353cb38c53e4a74a absolute top-0 h-full w-8 pointer-events-none"></div>
               </a>
@@ -680,6 +681,105 @@
   @keyframes toast-in {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ================= MULTI-DEVICE RESPONSIVE DESIGN ================= */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  /* Landscape phones & short viewports: allow smooth vertical scroll on envelope */
+  @media (max-height: 620px) {
+    #envelope-card-wrapper {
+      overflow-y: auto !important;
+      overflow-x: hidden !important;
+      padding: 12px 0;
+    }
+  }
+
+  /* Small & Standard Mobile Phones (<= 480px) */
+  @media (max-width: 480px) {
+    #music-floating-btn {
+      top: 10px !important;
+      left: 10px !important;
+      padding: 6px 11px !important;
+      font-size: 0.72rem !important;
+      gap: 4px !important;
+    }
+    #admin-floating-btn {
+      top: 10px !important;
+      right: 10px !important;
+      padding: 6px 11px !important;
+      font-size: 0.72rem !important;
+      gap: 4px !important;
+    }
+    .wedding-modal-backdrop {
+      padding: 10px !important;
+      align-items: flex-end !important;
+    }
+    .wedding-modal-card {
+      padding: 20px 16px !important;
+      border-radius: 16px 16px 12px 12px !important;
+      max-height: 88dvh !important;
+    }
+    .modal-header-title {
+      font-size: 1.2rem !important;
+      padding-right: 28px;
+    }
+    .admin-stats-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .admin-stat-val {
+      font-size: 1.35rem !important;
+    }
+    .admin-toolbar {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .admin-search-input {
+      width: 100% !important;
+    }
+    .admin-toolbar > div {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      width: 100% !important;
+      justify-content: space-between !important;
+    }
+    .admin-action-btn {
+      flex: 1 1 auto !important;
+      text-align: center !important;
+      padding: 8px 10px !important;
+      font-size: 0.75rem !important;
+    }
+    .admin-table th, .admin-table td {
+      padding: 8px 8px !important;
+      font-size: 0.78rem !important;
+    }
+  }
+
+  /* Extra Small Phones (<= 360px) */
+  @media (max-width: 360px) {
+    #music-floating-btn, #admin-floating-btn {
+      padding: 5px 9px !important;
+      font-size: 0.68rem !important;
+    }
+  }
+
+  /* Tablets & Desktops (>= 768px) */
+  @media (min-width: 768px) {
+    #music-floating-btn {
+      top: 20px;
+      left: 24px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+    }
+    #admin-floating-btn {
+      top: 20px;
+      right: 24px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+    }
   }
 </style>
 

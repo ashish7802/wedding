@@ -4,16 +4,17 @@
 <!-- ================= CLIENT-SIDE MAP & BRANDING ENGINE INTERCEPTOR ================= -->
 <script id="bulletproof-map-interceptor">
 (function() {
-  const OSM_MAP_URL = 'https://www.openstreetmap.org/export/embed.html?bbox=80.9200%2C26.7580%2C80.9650%2C26.7900&layer=mapnik&marker=26.7750%2C80.9420';
+  const EXACT_MAP_LINK = 'https://maps.app.goo.gl/775D5bTizAvwEypB9';
+  const GOOGLE_EMBED_URL = 'https://maps.google.com/maps?q=Kalyan+Lawn,+Police+Chowki,+Raebareli+Rd,+opposite+South+City,+New+Defence+Colony,+Lucknow,+Uttar+Pradesh+226029&hl=en&z=16&output=embed';
 
-  // 1. Prototype Setter Interceptor
+  // 1. Prototype Setter Interceptor - only intercepts restricted API-key embeds
   try {
     const originalSrcDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
     if (originalSrcDesc && originalSrcDesc.set) {
       Object.defineProperty(HTMLIFrameElement.prototype, 'src', {
         set: function(val) {
-          if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1') || val.includes('google.com/maps/embed'))) {
-            val = OSM_MAP_URL;
+          if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1'))) {
+            val = GOOGLE_EMBED_URL;
           }
           return originalSrcDesc.set.call(this, val);
         },
@@ -27,8 +28,8 @@
     const originalSetAttr = Element.prototype.setAttribute;
     Element.prototype.setAttribute = function(name, val) {
       if (this instanceof HTMLIFrameElement && typeof name === 'string' && name.toLowerCase() === 'src') {
-        if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1') || val.includes('google.com/maps/embed'))) {
-          val = OSM_MAP_URL;
+        if (typeof val === 'string' && (val.includes('AIzaSy') || val.includes('maps/embed/v1'))) {
+          val = GOOGLE_EMBED_URL;
         }
       }
       return originalSetAttr.call(this, name, val);
@@ -67,8 +68,8 @@
     const iframes = document.querySelectorAll('iframe');
     iframes.forEach(iframe => {
       const src = iframe.getAttribute('src') || iframe.src || '';
-      if (src.includes('AIzaSy') || src.includes('maps/embed/v1') || src.includes('google.com/maps/embed')) {
-        iframe.src = OSM_MAP_URL;
+      if (src.includes('AIzaSy') || src.includes('maps/embed/v1')) {
+        iframe.src = GOOGLE_EMBED_URL;
       }
     });
 
@@ -90,11 +91,11 @@
               Lucknow, Uttar Pradesh 226029
             </div>
             <div style="display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 12px;">
-              <a href="https://maps.app.goo.gl/hXb3bEkSL3GkvdFt7?g_st=iw" target="_blank" rel="noopener noreferrer"
+              <a href="${EXACT_MAP_LINK}" target="_blank" rel="noopener noreferrer"
                  style="background: linear-gradient(135deg, #ffd98a, #cca04a); color: #4a0206; font-weight: bold; padding: 8px 18px; border-radius: 9999px; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);">
                 🗺️ Open in Google Maps
               </a>
-              <a href="https://www.google.com/maps/dir/?api=1&destination=Kalyan+Lawn+Raebareli+Road+Lucknow+Uttar+Pradesh+226029" target="_blank" rel="noopener noreferrer"
+              <a href="${EXACT_MAP_LINK}" target="_blank" rel="noopener noreferrer"
                  style="background: rgba(255,255,255,0.12); color: #ffd98a; border: 1px solid #ffd98a; font-weight: bold; padding: 8px 18px; border-radius: 9999px; font-size: 0.88rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                 🚗 Get Driving Directions
               </a>
@@ -151,9 +152,13 @@
   <div class="cursor-default" data-landing-screenshot-id="invite-renderer" data-video-invitation="true" dir="ltr" lang="en">
     <div class="min-h-screen w-full bg-transparent">
       <main class="min-h-screen w-full">
-        <style>.md-card{--st-w:min(100vw,480px);}@media (min-width:768px){.md-card{--st-w:min(100vw,900px);}}</style>
+        <style>
+          .md-card { --st-w: min(100vw, 480px); }
+          @media (min-width: 640px) { .md-card { --st-w: min(92vw, 580px); } }
+          @media (min-width: 1024px) { .md-card { --st-w: 660px; } }
+        </style>
         <div class="flex w-full justify-center overflow-x-clip bg-transparent overflow-clip scrollbar-none" data-testid="mandap-darkred-template">
-          <div data-showcase-root="" class="relative w-full max-w-[480px] md:max-w-[900px] md:mx-auto overflow-hidden md:border md:border-[#f2c06e33] md-card isolate overflow-hidden" style="background-color:#6b0508;color:#ffdfaf">
+          <div data-showcase-root="" class="relative w-full max-w-[480px] sm:max-w-[580px] lg:max-w-[660px] mx-auto overflow-hidden sm:border sm:border-[#f2c06e44] sm:rounded-2xl sm:my-6 sm:shadow-[0_20px_70px_rgba(0,0,0,0.75)] md-card isolate" style="background-color:#6b0508;color:#ffdfaf">
             <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-20 mix-blend-overlay" style="background-image:radial-gradient(circle at 50% 25%, rgba(242,192,110,0.12) 0%, transparent 70%);opacity:0.5"></div>
 
             <!-- Section 1: Hero Mandap Arch -->
@@ -168,12 +173,12 @@
                 <img src="/images/themes/mandap-darkred/bell-decoration.webp" alt="" class="absolute left-[71.602%] top-[-5.590%] h-auto w-[25.355%] max-w-none object-contain" loading="eager" decoding="async"/>
                 <img src="/images/themes/mandap-darkred/om-decoration.webp" alt="" class="absolute left-[41.780%] top-[17.143%] h-auto w-[16.440%] max-w-none object-contain" loading="eager" decoding="async"/>
               </div>
-              <div class="absolute left-1/2 z-10 flex -translate-x-1/2 flex-col items-center text-center" style="top:calc(0.67120 * var(--st-w));width:59.637%">
-                <p class="whitespace-pre-line text-[10px] uppercase tracking-[0.18em] md:text-[13px]" style="font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif;color:#ffdfaf">!! Om Shree Ganeshay Namah !!</p>
+              <div class="absolute left-1/2 z-10 flex -translate-x-1/2 flex-col items-center text-center" style="top:calc(0.67120 * var(--st-w));width:68%">
+                <p class="whitespace-pre-line uppercase tracking-[0.16em]" style="font-size:clamp(9px, calc(0.022 * var(--st-w)), 14px);font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif;color:#ffdfaf">!! Om Shree Ganeshay Namah !!</p>
                 <div class="flex w-full flex-col items-center leading-none" style="margin-top:calc(0.03628 * var(--st-w));font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">
-                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:36px;line-height:1.3;padding-top:0.14em">Dr.Shubhanil</span></div>
-                  <span class="my-[5px] md:my-2" style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive;color:#f2c06e;font-size:23px;line-height:1">&amp;</span>
-                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:36px;line-height:1.3;padding-top:0.14em">Dr.Nidhi</span></div>
+                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.078 * var(--st-w)), 48px);line-height:1.25;padding-top:0.1em">Dr.Shubhanil</span></div>
+                  <span class="my-[4px] md:my-2" style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive;color:#f2c06e;font-size:clamp(18px, calc(0.05 * var(--st-w)), 30px);line-height:1">&amp;</span>
+                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.078 * var(--st-w)), 48px);line-height:1.25;padding-top:0.1em">Dr.Nidhi</span></div>
                 </div>
               </div>
             </section>
@@ -182,57 +187,57 @@
             <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
               <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none absolute left-[-19.388%] z-[1] h-auto w-[48.299%] max-w-none object-contain" style="top:calc(0.34014 * var(--st-w));transform:scaleX(-1);will-change:transform" loading="lazy" decoding="async"/>
               <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none absolute left-[70.975%] z-[1] h-auto w-[48.299%] max-w-none object-contain" style="top:calc(0.34014 * var(--st-w));will-change:transform" loading="lazy" decoding="async"/>
-              <div class="relative z-10 flex w-full flex-col items-center" style="padding-inline:8.503%">
-                <h2 class="uppercase font-bold text-[20px] md:text-[26px] text-center" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">Son of  &amp; Daughter of</span></h2>
-                <div class="grid w-full grid-cols-[1fr_auto_1fr] grid-rows-[repeat(4,auto)] justify-center gap-x-3 gap-y-[3px] md:gap-x-6" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;margin-top:calc(0.03175 * var(--st-w))">
+              <div class="relative z-10 flex w-full flex-col items-center" style="padding-inline:clamp(16px, 7.5%, 48px)">
+                <h2 class="uppercase font-bold text-center" style="font-size:clamp(18px, calc(0.042 * var(--st-w)), 26px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">Son of  &amp; Daughter of</span></h2>
+                <div class="grid w-full grid-cols-[1fr_auto_1fr] grid-rows-[repeat(4,auto)] justify-center gap-x-2.5 sm:gap-x-5 gap-y-[3px]" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;margin-top:calc(0.03175 * var(--st-w))">
                   <div class="row-span-4 grid grid-rows-subgrid justify-items-center min-w-0 text-center">
-                    <span class="text-[12px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;font-size:12px"><span dir="auto">Anil kr</span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;font-size:12px"><span dir="auto">Shobha Devi</span></span>
-                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Sikandarpur, Muzaffarpur, Bihar</span></div>
+                    <span class="text-[12px] sm:text-[14px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Anil kr</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Shobha Devi</span></span>
+                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] sm:text-[12px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Sikandarpur, Muzaffarpur, Bihar</span></div>
                   </div>
                   <img src="/images/themes/mandap-darkred/line-decoration.webp" alt="" aria-hidden="true" class="row-span-4 h-[51px] w-auto max-w-none self-center object-contain md:h-[68px]"/>
                   <div class="row-span-4 grid grid-rows-subgrid justify-items-center min-w-0 text-center">
-                    <span class="text-[12px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;font-size:12px"><span dir="auto">Sandeep </span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;font-size:12px"><span dir="auto">Vandana Devi</span></span>
-                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Rakabganj,Lucknow, Uttar Pradesh </span></div>
+                    <span class="text-[12px] sm:text-[14px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Sandeep </span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Vandana Devi</span></span>
+                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] sm:text-[12px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Rakabganj,Lucknow, Uttar Pradesh </span></div>
                   </div>
                 </div>
-                <div class="flex flex-col gap-[3px] text-center text-[16px] md:text-[20px] uppercase mx-auto md:max-w-[560px]" style="white-space:pre-line;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;margin-top:calc(0.04535 * var(--st-w))"><span dir="auto">WE JOYFULLY ANNOUNCE
+                <div class="flex flex-col gap-[3px] text-center text-[15px] sm:text-[18px] md:text-[20px] uppercase mx-auto md:max-w-[560px]" style="white-space:pre-line;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;margin-top:calc(0.04535 * var(--st-w))"><span dir="auto">WE JOYFULLY ANNOUNCE
 THE WEDDING Ceremony 
 </span></div>
-                <div data-showcase-keep="" class="w-full min-w-0 flex w-full flex-col items-center" style="margin-top:calc(0.04082 * var(--st-w))">
-                  <h3 class="w-[80%] min-h-[80px] flex items-center justify-center leading-[54px] md:leading-[72px] whitespace-nowrap" style="font-size:35px;font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Shubhanil </h3>
-                  <div class="uppercase text-[10px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Groom</span></div>
-                  <div class="text-[35px] leading-none md:text-[47px]" style="color:#f2c06e;font-family:&quot;Clicker Script&quot;, &quot;Alex Brush&quot;, ChungDoiIndic, cursive">&amp;</div>
-                  <h3 class="w-[80%] min-h-[80px] flex items-center justify-center leading-[54px] md:leading-[72px] whitespace-nowrap" style="font-size:35px;font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Nidhi</h3>
-                  <div class="uppercase text-[10px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Bride</span></div>
+                <div data-showcase-keep="" class="w-full min-w-0 flex flex-col items-center" style="margin-top:calc(0.04082 * var(--st-w))">
+                  <h3 class="w-[90%] min-h-[64px] sm:min-h-[76px] flex items-center justify-center whitespace-nowrap" style="font-size:clamp(26px, calc(0.075 * var(--st-w)), 44px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Shubhanil </h3>
+                  <div class="uppercase text-[10px] sm:text-[12px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Groom</span></div>
+                  <div class="text-[30px] sm:text-[38px] leading-none md:text-[44px] my-1" style="color:#f2c06e;font-family:&quot;Clicker Script&quot;, &quot;Alex Brush&quot;, ChungDoiIndic, cursive">&amp;</div>
+                  <h3 class="w-[90%] min-h-[64px] sm:min-h-[76px] flex items-center justify-center whitespace-nowrap" style="font-size:clamp(26px, calc(0.075 * var(--st-w)), 44px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Nidhi</h3>
+                  <div class="uppercase text-[10px] sm:text-[12px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Bride</span></div>
                 </div>
                 <div class="flex w-full flex-col items-center" style="margin-top:calc(0.04535 * var(--st-w));gap:calc(0.04989 * var(--st-w))">
                   <div class="relative flex flex-col items-center gap-[6px] text-center md:gap-2" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">
-                    <div style="color:#f2c06e;max-width:calc(0.54422 * var(--st-w))"><span dir="auto" class="whitespace-pre-line text-[16px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]">TILK, HALDI, MARWA MATKOR CEREMONY AT - MUZAFFARPUR (HOME)</span></div>
+                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[14px] sm:text-[17px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]">TILK, HALDI, MARWA MATKOR CEREMONY AT - MUZAFFARPUR (HOME)</span></div>
                     <div class="flex w-full max-w-[165px] md:max-w-[230px] items-center justify-between text-[12px] md:text-[16px] uppercase whitespace-nowrap min-w-max gap-x-3" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span>AT 10:00 AM</span><span><span dir="auto">FRIDAY</span></span></div>
                     <div class="flex items-center gap-[9px] md:gap-3" style="color:#f2c06e">
-                      <span class="text-[57px] md:text-[76px] leading-none" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">20</span>
-                      <div class="h-[46px] w-[1px] md:h-[62px]" style="background-color:#f2c06e;opacity:0.8"></div>
+                      <span class="text-[48px] sm:text-[57px] md:text-[72px] leading-none" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">20</span>
+                      <div class="h-[42px] sm:h-[46px] w-[1px] md:h-[60px]" style="background-color:#f2c06e;opacity:0.8"></div>
                       <div class="flex flex-col items-start justify-center gap-1 text-left">
-                        <span class="text-[17px] md:text-[23px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
-                        <span class="text-[17px] md:text-[23px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
+                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
+                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
                       </div>
                     </div>
                   </div>
                   <div class="relative flex flex-col items-center gap-[6px] text-center md:gap-2" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">
-                    <div style="color:#f2c06e;max-width:calc(0.54422 * var(--st-w))"><span dir="auto" class="whitespace-pre-line text-[16px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]">WEDDING CEREMONY AT -
+                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[14px] sm:text-[17px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]">WEDDING CEREMONY AT -
 KALYAN LAWN
 Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></div>
                     <div class="flex w-full max-w-[165px] md:max-w-[230px] items-center justify-between text-[12px] md:text-[16px] uppercase whitespace-nowrap min-w-max gap-x-3" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span>AT 6:00 PM</span><span><span dir="auto">WEDNESDAY</span></span></div>
                     <div class="flex items-center gap-[9px] md:gap-3" style="color:#f2c06e">
-                      <span class="text-[57px] md:text-[76px] leading-none" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">25</span>
-                      <div class="h-[46px] w-[1px] md:h-[62px]" style="background-color:#f2c06e;opacity:0.8"></div>
+                      <span class="text-[48px] sm:text-[57px] md:text-[72px] leading-none" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">25</span>
+                      <div class="h-[42px] sm:h-[46px] w-[1px] md:h-[60px]" style="background-color:#f2c06e;opacity:0.8"></div>
                       <div class="flex flex-col items-start justify-center gap-1 text-left">
-                        <span class="text-[17px] md:text-[23px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
-                        <span class="text-[17px] md:text-[23px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
+                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
+                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
                       </div>
                     </div>
                   </div>
@@ -300,8 +305,8 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
                       <p>Calculating...</p>
                     </div>
                   </div>
-                  <div class="relative mx-auto mt-7 md:mt-9 w-full max-w-[255px] md:max-w-[330px] pt-[52px] pb-[52px] md:pt-[66px] md:pb-[66px]">
-                    <img src="/images/themes/mandap-darkred/calendar-frame.webp" aria-hidden="true" alt="" style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);width:calc(100% + 154px);max-width:none;height:auto;pointer-events:none;z-index:0"/>
+                  <div class="relative mx-auto mt-7 md:mt-9 w-full max-w-[240px] sm:max-w-[270px] md:max-w-[320px] pt-[46px] pb-[46px] sm:pt-[54px] sm:pb-[54px] md:pt-[64px] md:pb-[64px]">
+                    <img src="/images/themes/mandap-darkred/calendar-frame.webp" aria-hidden="true" alt="" style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);width:min(calc(100% + 145px), 92vw);max-width:none;height:auto;pointer-events:none;z-index:0"/>
                     <div style="position:relative;z-index:1">
                       <div dir="ltr" data-showcase-keep="" class="w-full max-w-[280px] md:max-w-[310px] mx-auto rounded-lg overflow-hidden !max-w-none w-full" style="color:#f2c06e">
                         <div class="text-center py-2.5 text-[15px] md:text-[19px] font-bold tracking-wide border-b" style="border-color:color-mix(in srgb, #f2c06e 27%, transparent);font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;color:#f2c06e">November 2026</div>
@@ -315,47 +320,47 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
                           <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">Su</div>
                         </div>
                         <div class="grid grid-cols-7 gap-y-0.5 px-1 py-2">
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">1</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">2</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">3</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">4</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">5</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">6</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">7</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">8</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">9</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">10</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">11</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">12</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">13</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">14</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">15</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">16</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">17</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">18</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">19</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">20</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">21</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">22</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">23</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">24</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><div class="relative w-[26px] h-[24px] md:w-[30px] md:h-[28px] flex items-center justify-center"><img src="/images/themes/mandap-darkred/heart.svg" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-contain"/><span class="relative z-10 text-[11px] md:text-[12px] font-bold" style="color:#ffffff">25</span></div></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">26</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">27</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">28</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">29</span></div>
-                          <div class="flex items-center justify-center h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">30</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">1</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">2</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">3</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">4</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">5</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">6</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">7</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">8</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">9</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">10</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">11</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">12</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">13</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">14</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">15</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">16</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">17</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">18</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">19</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">20</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">21</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">22</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">23</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">24</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><div class="relative w-[26px] h-[24px] md:w-[30px] md:h-[28px] flex items-center justify-center"><img src="/images/themes/mandap-darkred/heart.svg" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-contain"/><span class="relative z-10 text-[11px] md:text-[12px] font-bold" style="color:#ffffff">25</span></div></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">26</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">27</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">28</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">29</span></div>
+                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">30</span></div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Dr.Shubhanil%20%26%20Dr.Nidhi%27s%20Wedding%20Celebration&amp;dates=20261125T113000Z/20261125T173000Z&amp;ctz=Asia/Calcutta&amp;details=Join%20us%20to%20celebrate%20the%20marriage%20of%20Dr.Shubhanil%20%26%20Dr.Nidhi%20at%20Kalyan%20Lawn%2C%20Lucknow&amp;location=Kalyan%20Lawn%2C%20Police%20Chowki%2C%20Raebareli%20Rd%2C%20opposite%20South%20City%2C%20New%20Defence%20Colony%2C%20Lucknow%2C%20Uttar%20Pradesh%20226029" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center justify-center text-[13px] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-70 md:text-[15px]" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif" data-showcase-join-prev=""><span dir="auto">Add to Calendar</span></a>
+                  <a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Dr.Shubhanil%20%26%20Dr.Nidhi%27s%20Wedding%20Celebration&amp;dates=20261125T113000Z/20261125T173000Z&amp;ctz=Asia/Calcutta&amp;details=Join%20us%20to%20celebrate%20the%20marriage%20of%20Dr.Shubhanil%20%26%20Dr.Nidhi%20at%20Kalyan%20Lawn%2C%20Lucknow%20-%20https%3A%2F%2Fmaps.app.goo.gl%2F775D5bTizAvwEypB9&amp;location=Kalyan%20Lawn%2C%20Police%20Chowki%2C%20Raebareli%20Rd%2C%20opposite%20South%20City%2C%20New%20Defence%20Colony%2C%20Lucknow%2C%20Uttar%20Pradesh%20226029" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center justify-center text-[13px] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-70 md:text-[15px]" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif" data-showcase-join-prev=""><span dir="auto">Add to Calendar</span></a>
                 </div>
                 <img src="/images/themes/mandap-darkred/goldenline-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none mx-auto block h-auto max-w-none object-contain" style="width:calc(0.65986 * var(--st-w));margin-top:calc(0.04082 * var(--st-w))" loading="lazy" decoding="async"/>
               </div>
@@ -364,7 +369,7 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
             <!-- Section 5: Confirm Attendance (RSVP) Button -->
             <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w));padding-inline:8.503%">
               <div class="relative z-10 flex w-full flex-col items-center justify-center" data-landing-screenshot-id="invite-rsvp">
-                <button type="button" id="confirm-attendance-btn" onclick="openGuestRsvpModal()" class="inline-flex items-center justify-center rounded-full px-7 py-[8px] text-[13px] font-semibold uppercase tracking-[0.04em] transition-transform hover:scale-[1.03] md:text-[15px] cursor-pointer shadow-lg" style="background-color:#f2c06e;color:#764c4d;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif">
+                <button type="button" id="confirm-attendance-btn" onclick="openGuestRsvpModal()" class="inline-flex items-center justify-center rounded-full px-7 py-[9px] text-[13px] font-semibold uppercase tracking-[0.04em] transition-transform hover:scale-[1.03] md:text-[15px] cursor-pointer shadow-lg" style="background-color:#f2c06e;color:#764c4d;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif">
                   <span class="relative z-10 flex min-h-0 items-center justify-center gap-2"><span dir="auto">CONFIRM ATTENDANCE</span></span>
                 </button>
               </div>
@@ -373,44 +378,47 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
             <!-- Section 6: Wedding Venue & Location Map -->
             <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
               <div class="flex w-full flex-col items-center">
-                <section class="relative flex w-full flex-col items-center gap-3 px-4 md:gap-4 md:px-8" data-landing-screenshot-id="invite-map">
+                <section class="relative flex w-full flex-col items-center gap-3 px-4 sm:px-6 md:gap-4 md:px-8" data-landing-screenshot-id="invite-map">
                   <div class="relative text-center w-full" style="max-width: 580px; margin: 0 auto;">
-                    <h3 class="uppercase font-bold text-[20px] md:text-[26px] text-center" style="color:#f2c06e;font-family:'Times New Roman', Times, serif;letter-spacing:0.04em;margin-bottom:8px;">
+                    <h3 class="uppercase font-bold text-[19px] sm:text-[22px] md:text-[26px] text-center" style="color:#f2c06e;font-family:'Times New Roman', Times, serif;letter-spacing:0.04em;margin-bottom:8px;">
                       Wedding Venue &amp; Location
                     </h3>
-                    <div style="font-family:'Times New Roman', Times, serif; font-size:1.35rem; color:#fff; font-weight:700; margin-bottom:6px;">
-                      KALYAN LAWN
-                    </div>
-                    <div style="color:#ffdfaf; font-size:0.92rem; line-height:1.5; margin-bottom:16px;">
-                      Police Chowki, Raebareli Rd, opposite South City, New Defence Colony,<br>
+                    <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block;">
+                      <div style="font-family:'Times New Roman', Times, serif; font-size:clamp(1.2rem, 4vw, 1.45rem); color:#ffd98a; font-weight:700; margin-bottom:6px; letter-spacing:0.04em;">
+                        📍 KALYAN LAWN
+                      </div>
+                    </a>
+                    <div style="color:#ffdfaf; font-size:clamp(0.84rem, 2.8vw, 0.96rem); line-height:1.55; margin-bottom:16px; padding:0 4px;">
+                      Police Chowki, Raebareli Rd, opposite South City, New Defence Colony,<br class="hidden sm:inline">
                       Lucknow, Uttar Pradesh 226029
                     </div>
 
-                    <!-- 100% Reliable, Zero-API-Key Map Embed -->
-                    <div style="position:relative; width:100%; height:290px; border-radius:14px; overflow:hidden; border:2px solid #f2c06e; box-shadow:0 8px 25px rgba(0,0,0,0.6); margin-bottom:16px;">
+                    <!-- Interactive Google Maps Embed for Kalyan Lawn -->
+                    <div class="venue-map-container" style="position:relative; width:100%; height:clamp(240px, 52vw, 340px); border-radius:14px; overflow:hidden; border:2px solid #f2c06e; box-shadow:0 8px 25px rgba(0,0,0,0.6); margin-bottom:16px; background:#3d0205;">
                       <iframe 
                         width="100%" 
                         height="100%" 
-                        style="border:0;" 
+                        style="border:0; display:block;" 
                         loading="lazy" 
                         allowfullscreen 
-                        title="Kalyan Lawn Map"
-                        src="https://www.openstreetmap.org/export/embed.html?bbox=80.9200%2C26.7580%2C80.9650%2C26.7900&layer=mapnik&marker=26.7750%2C80.9420">
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Kalyan Lawn Wedding Venue Map"
+                        src="https://maps.google.com/maps?q=Kalyan+Lawn,+Police+Chowki,+Raebareli+Rd,+opposite+South+City,+New+Defence+Colony,+Lucknow,+Uttar+Pradesh+226029&amp;hl=en&amp;z=16&amp;output=embed">
                       </iframe>
                     </div>
 
-                    <!-- Direct Google Maps App & Navigation Buttons -->
-                    <div style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-                      <a href="https://maps.app.goo.gl/hXb3bEkSL3GkvdFt7?g_st=iw" target="_blank" rel="noopener noreferrer" 
-                         class="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm md:text-base font-bold transition-transform hover:scale-105" 
+                    <!-- Direct Exact Google Maps Link Buttons -->
+                    <div class="venue-map-actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; width:100%;">
+                      <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" 
+                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-5 sm:px-6 py-2.5 text-xs sm:text-sm md:text-base font-bold transition-transform hover:scale-105" 
                          style="background:linear-gradient(135deg, #ffd98a, #cca04a); color:#4a0206; box-shadow:0 4px 15px rgba(242,192,110,0.4); text-decoration:none;">
-                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                        <svg class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
                         <span>Open in Google Maps</span>
                       </a>
-                      <a href="https://www.google.com/maps/dir/?api=1&destination=Kalyan+Lawn+Raebareli+Road+Lucknow+Uttar+Pradesh+226029" target="_blank" rel="noopener noreferrer" 
-                         class="inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm md:text-base font-semibold transition-transform hover:scale-105" 
+                      <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" 
+                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-5 sm:px-6 py-2.5 text-xs sm:text-sm md:text-base font-semibold transition-transform hover:scale-105" 
                          style="background:rgba(242,192,110,0.2); border:1px solid #f2c06e; color:#ffdfaf; text-decoration:none;">
                         <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
@@ -426,15 +434,15 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
             <!-- Section 7: Wedding Day Schedule -->
             <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
-              <div class="relative z-10 flex w-full flex-col items-center px-[14%] md:px-[17%]">
-                <h2 class="uppercase font-bold text-[20px] md:text-[26px] text-center mb-5" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">WEDDING DAY SCHEDULE</span></h2>
-                <ol class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-10" style="font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;padding-top:12px;padding-bottom:12px">
+              <div class="relative z-10 flex w-full flex-col items-center px-[8%] sm:px-[12%] md:px-[15%]">
+                <h2 class="uppercase font-bold text-[19px] sm:text-[22px] md:text-[26px] text-center mb-5" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">WEDDING DAY SCHEDULE</span></h2>
+                <ol class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-10" style="font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;padding-top:12px;padding-bottom:12px">
                   <li class="contents">
-                    <span class="pt-0.5 text-right text-[13px] md:text-[17px] tabular-nums tracking-wide leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">
+                    <span class="pt-0.5 text-right text-[13px] sm:text-[15px] md:text-[17px] tabular-nums tracking-wide leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">
                       <span class="relative inline-block">
-                        <span aria-hidden="true" class="absolute top-1/2 flex w-max items-center justify-center -translate-y-1/2 right-full" style="margin-right:39px">
-                          <span class="flex w-[73px] justify-center md:w-[95px]">
-                            <img src="/images/themes/mandap-darkred/wreath.webp" alt="" aria-hidden="true" class="w-[51px] md:w-[66px] h-auto max-w-none object-contain" loading="lazy" decoding="async"/>
+                        <span aria-hidden="true" class="absolute top-1/2 flex w-max items-center justify-center -translate-y-1/2 right-full" style="margin-right:clamp(8px, 3vw, 32px)">
+                          <span class="flex w-[44px] sm:w-[68px] md:w-[88px] justify-center">
+                            <img src="/images/themes/mandap-darkred/wreath.webp" alt="" aria-hidden="true" class="w-[38px] sm:w-[50px] md:w-[64px] h-auto max-w-none object-contain" loading="lazy" decoding="async"/>
                           </span>
                         </span>5:00 PM
                       </span>
@@ -443,7 +451,7 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
                       <span class="absolute left-1/2 -translate-x-1/2 w-px top-1/2 bottom-1/2" style="background-color:color-mix(in srgb, #f2c06e 40%, transparent)"></span>
                       <span class="relative block h-2.5 w-2.5 rounded-full" style="background-color:#f2c06e;box-shadow:0 0 0 2px color-mix(in srgb, #f2c06e 13%, transparent)"></span>
                     </span>
-                    <span class="text-[13px] md:text-[17px]" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">Barat Will be headed towards Wedding Venue From Residence lko</span></span>
+                    <span class="text-[13px] sm:text-[15px] md:text-[17px] leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">Barat Will be headed towards Wedding Venue From Residence lko</span></span>
                   </li>
                 </ol>
               </div>
@@ -958,6 +966,128 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  /* ================= MULTI-DEVICE RESPONSIVE DESIGN ================= */
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  /* Small & Standard Mobile Phones (<= 480px) */
+  @media (max-width: 480px) {
+    #music-floating-btn {
+      top: 10px !important;
+      left: 10px !important;
+      padding: 6px 11px !important;
+      font-size: 0.72rem !important;
+      gap: 4px !important;
+    }
+    #admin-floating-btn {
+      top: 10px !important;
+      right: 10px !important;
+      padding: 6px 11px !important;
+      font-size: 0.72rem !important;
+      gap: 4px !important;
+    }
+    .countdown-grid {
+      gap: 6px !important;
+    }
+    .countdown-unit {
+      min-width: 54px !important;
+      padding: 6px 8px !important;
+    }
+    .countdown-num {
+      font-size: 1.15rem !important;
+    }
+    .venue-map-actions {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .venue-map-btn {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+    .wedding-modal-backdrop {
+      padding: 10px !important;
+      align-items: flex-end !important;
+    }
+    .wedding-modal-card {
+      padding: 20px 16px !important;
+      border-radius: 16px 16px 12px 12px !important;
+      max-height: 88dvh !important;
+    }
+    .modal-header-title {
+      font-size: 1.2rem !important;
+      padding-right: 28px;
+    }
+    .admin-stats-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+      gap: 8px !important;
+    }
+    .admin-stat-val {
+      font-size: 1.35rem !important;
+    }
+    .admin-toolbar {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .admin-search-input {
+      width: 100% !important;
+    }
+    .admin-toolbar > div {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      width: 100% !important;
+      justify-content: space-between !important;
+    }
+    .admin-action-btn {
+      flex: 1 1 auto !important;
+      text-align: center !important;
+      padding: 8px 10px !important;
+      font-size: 0.75rem !important;
+    }
+    .admin-table th, .admin-table td {
+      padding: 8px 8px !important;
+      font-size: 0.78rem !important;
+    }
+  }
+
+  /* Extra Small Phones (<= 360px) */
+  @media (max-width: 360px) {
+    #music-floating-btn, #admin-floating-btn {
+      padding: 5px 9px !important;
+      font-size: 0.68rem !important;
+    }
+    .countdown-unit {
+      min-width: 48px !important;
+      padding: 5px 6px !important;
+    }
+    .countdown-num {
+      font-size: 1.05rem !important;
+    }
+  }
+
+  /* Tablets & Desktops (>= 768px) */
+  @media (min-width: 768px) {
+    #music-floating-btn {
+      top: 20px;
+      left: 24px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+    }
+    #admin-floating-btn {
+      top: 20px;
+      right: 24px;
+      padding: 9px 18px;
+      font-size: 0.85rem;
+    }
+    .countdown-unit {
+      min-width: 74px;
+      padding: 10px 14px;
+    }
+    .countdown-num {
+      font-size: 1.65rem;
+    }
+  }
 </style>
 
 <!-- Floating Music Button -->
@@ -1337,6 +1467,8 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
     function renderGallery() {
       const total = cards.length;
+      const isNarrow = window.innerWidth < 400;
+      const sideOffset = isNarrow ? '46%' : '60%';
       cards.forEach((card, i) => {
         const offset = (i - activeIdx + total) % total;
         if (offset === 0) {
@@ -1345,12 +1477,12 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
           card.style.zIndex = '100';
           card.classList.add('ring-2', 'ring-white/30');
         } else if (offset === 1) {
-          card.style.transform = 'translateX(60%) translateZ(-150px) rotateY(45deg) scale(0.85)';
+          card.style.transform = `translateX(${sideOffset}) translateZ(-150px) rotateY(45deg) scale(0.85)`;
           card.style.opacity = '0.75';
           card.style.zIndex = '99';
           card.classList.remove('ring-2', 'ring-white/30');
         } else {
-          card.style.transform = 'translateX(-60%) translateZ(-150px) rotateY(-45deg) scale(0.85)';
+          card.style.transform = `translateX(-${sideOffset}) translateZ(-150px) rotateY(-45deg) scale(0.85)`;
           card.style.opacity = '0.75';
           card.style.zIndex = '99';
           card.classList.remove('ring-2', 'ring-white/30');
@@ -1470,6 +1602,7 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
       }, { passive: true });
     }
 
+    window.addEventListener('resize', renderGallery);
     renderGallery();
     resetAutoPlay();
   }

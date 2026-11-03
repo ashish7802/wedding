@@ -23,7 +23,7 @@
 | **Barat Departure** | Wednesday, Nov 25, 2026 | 5:00 PM | From Lucknow Residence to Venue |
 | **Wedding Ceremony (Shubh Vivah)** | Wednesday, Nov 25, 2026 | 6:00 PM Onwards | **Kalyan Lawn**, Raebareli Road, Lucknow |
 
-📍 **Venue Map:** [Kalyan Lawn on Google Maps](https://maps.app.goo.gl/hXb3bEkSL3GkvdFt7?g_st=iw)  
+📍 **Venue Map:** [Kalyan Lawn on Google Maps](https://maps.app.goo.gl/775D5bTizAvwEypB9)  
 *Address:* Police Chowki, Raebareli Rd, opposite South City, New Defence Colony, Lucknow, Uttar Pradesh 226029
 
 ---
