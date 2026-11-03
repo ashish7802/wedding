@@ -153,12 +153,35 @@
     <div class="min-h-screen w-full bg-transparent">
       <main class="min-h-screen w-full">
         <style>
-          .md-card { --st-w: min(100vw, 480px); }
-          @media (min-width: 640px) { .md-card { --st-w: min(92vw, 580px); } }
-          @media (min-width: 1024px) { .md-card { --st-w: 660px; } }
+          .md-card {
+            --st-w: min(100vw, 480px);
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+          }
+          @media (min-width: 640px) {
+            .md-card {
+              --st-w: min(92vw, 560px);
+              max-width: min(92vw, 560px);
+              margin: 24px auto;
+              border: 1px solid rgba(242, 192, 110, 0.32);
+              border-radius: 18px;
+              box-shadow: 0 20px 70px rgba(0, 0, 0, 0.75);
+            }
+          }
+          @media (min-width: 1024px) {
+            .md-card {
+              --st-w: 620px;
+              max-width: 620px;
+              margin: 32px auto;
+              border: 1px solid rgba(242, 192, 110, 0.38);
+              border-radius: 22px;
+              box-shadow: 0 25px 85px rgba(0, 0, 0, 0.82);
+            }
+          }
         </style>
         <div class="flex w-full justify-center overflow-x-clip bg-transparent overflow-clip scrollbar-none" data-testid="mandap-darkred-template">
-          <div data-showcase-root="" class="relative w-full max-w-[480px] sm:max-w-[580px] lg:max-w-[660px] mx-auto overflow-hidden sm:border sm:border-[#f2c06e44] sm:rounded-2xl sm:my-6 sm:shadow-[0_20px_70px_rgba(0,0,0,0.75)] md-card isolate" style="background-color:#6b0508;color:#ffdfaf">
+          <div data-showcase-root="" class="relative w-full max-w-[480px] mx-auto overflow-hidden md-card isolate" style="background-color:#6b0508;color:#ffdfaf">
             <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-20 mix-blend-overlay" style="background-image:radial-gradient(circle at 50% 25%, rgba(242,192,110,0.12) 0%, transparent 70%);opacity:0.5"></div>
 
             <!-- Section 1: Hero Mandap Arch -->
@@ -173,12 +196,12 @@
                 <img src="/images/themes/mandap-darkred/bell-decoration.webp" alt="" class="absolute left-[71.602%] top-[-5.590%] h-auto w-[25.355%] max-w-none object-contain" loading="eager" decoding="async"/>
                 <img src="/images/themes/mandap-darkred/om-decoration.webp" alt="" class="absolute left-[41.780%] top-[17.143%] h-auto w-[16.440%] max-w-none object-contain" loading="eager" decoding="async"/>
               </div>
-              <div class="absolute left-1/2 z-10 flex -translate-x-1/2 flex-col items-center text-center" style="top:calc(0.67120 * var(--st-w));width:68%">
-                <p class="whitespace-pre-line uppercase tracking-[0.16em]" style="font-size:clamp(9px, calc(0.022 * var(--st-w)), 14px);font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif;color:#ffdfaf">!! Om Shree Ganeshay Namah !!</p>
+              <div class="absolute left-1/2 z-10 flex -translate-x-1/2 flex-col items-center text-center" style="top:calc(0.67120 * var(--st-w));width:66%">
+                <p class="whitespace-pre-line uppercase tracking-[0.18em]" style="font-size:clamp(9px, calc(0.022 * var(--st-w)), 14px);font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif;color:#ffdfaf">!! Om Shree Ganeshay Namah !!</p>
                 <div class="flex w-full flex-col items-center leading-none" style="margin-top:calc(0.03628 * var(--st-w));font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">
-                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.078 * var(--st-w)), 48px);line-height:1.25;padding-top:0.1em">Dr.Shubhanil</span></div>
-                  <span class="my-[4px] md:my-2" style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive;color:#f2c06e;font-size:clamp(18px, calc(0.05 * var(--st-w)), 30px);line-height:1">&amp;</span>
-                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.078 * var(--st-w)), 48px);line-height:1.25;padding-top:0.1em">Dr.Nidhi</span></div>
+                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.076 * var(--st-w)), 46px);line-height:1.25;padding-top:0.1em">Dr.Shubhanil</span></div>
+                  <span class="my-[5px] md:my-2" style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive;color:#f2c06e;font-size:clamp(18px, calc(0.048 * var(--st-w)), 28px);line-height:1">&amp;</span>
+                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.076 * var(--st-w)), 46px);line-height:1.25;padding-top:0.1em">Dr.Nidhi</span></div>
                 </div>
               </div>
             </section>
@@ -189,55 +212,55 @@
               <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none absolute left-[70.975%] z-[1] h-auto w-[48.299%] max-w-none object-contain" style="top:calc(0.34014 * var(--st-w));will-change:transform" loading="lazy" decoding="async"/>
               <div class="relative z-10 flex w-full flex-col items-center" style="padding-inline:clamp(16px, 7.5%, 48px)">
                 <h2 class="uppercase font-bold text-center" style="font-size:clamp(18px, calc(0.042 * var(--st-w)), 26px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">Son of  &amp; Daughter of</span></h2>
-                <div class="grid w-full grid-cols-[1fr_auto_1fr] grid-rows-[repeat(4,auto)] justify-center gap-x-2.5 sm:gap-x-5 gap-y-[3px]" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;margin-top:calc(0.03175 * var(--st-w))">
+                <div class="grid w-full grid-cols-[1fr_auto_1fr] grid-rows-[repeat(4,auto)] justify-center gap-x-3 gap-y-[3px] md:gap-x-6" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;margin-top:calc(0.03175 * var(--st-w))">
                   <div class="row-span-4 grid grid-rows-subgrid justify-items-center min-w-0 text-center">
-                    <span class="text-[12px] sm:text-[14px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Anil kr</span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Shobha Devi</span></span>
-                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] sm:text-[12px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Sikandarpur, Muzaffarpur, Bihar</span></div>
+                    <span class="text-[12px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Anil kr</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Shobha Devi</span></span>
+                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Sikandarpur, Muzaffarpur, Bihar</span></div>
                   </div>
                   <img src="/images/themes/mandap-darkred/line-decoration.webp" alt="" aria-hidden="true" class="row-span-4 h-[51px] w-auto max-w-none self-center object-contain md:h-[68px]"/>
                   <div class="row-span-4 grid grid-rows-subgrid justify-items-center min-w-0 text-center">
-                    <span class="text-[12px] sm:text-[14px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Sandeep </span></span>
-                    <span class="font-semibold [overflow-wrap:anywhere] text-[13px] sm:text-[15px] md:text-[17px]" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Vandana Devi</span></span>
-                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] sm:text-[12px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Rakabganj,Lucknow, Uttar Pradesh </span></div>
+                    <span class="text-[12px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Sandeep </span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Vandana Devi</span></span>
+                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Rakabganj,Lucknow, Uttar Pradesh </span></div>
                   </div>
                 </div>
-                <div class="flex flex-col gap-[3px] text-center text-[15px] sm:text-[18px] md:text-[20px] uppercase mx-auto md:max-w-[560px]" style="white-space:pre-line;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;margin-top:calc(0.04535 * var(--st-w))"><span dir="auto">WE JOYFULLY ANNOUNCE
+                <div class="flex flex-col gap-[3px] text-center text-[16px] md:text-[20px] uppercase mx-auto md:max-w-[560px]" style="white-space:pre-line;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;margin-top:calc(0.04535 * var(--st-w))"><span dir="auto">WE JOYFULLY ANNOUNCE
 THE WEDDING Ceremony 
 </span></div>
                 <div data-showcase-keep="" class="w-full min-w-0 flex flex-col items-center" style="margin-top:calc(0.04082 * var(--st-w))">
-                  <h3 class="w-[90%] min-h-[64px] sm:min-h-[76px] flex items-center justify-center whitespace-nowrap" style="font-size:clamp(26px, calc(0.075 * var(--st-w)), 44px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Shubhanil </h3>
-                  <div class="uppercase text-[10px] sm:text-[12px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Groom</span></div>
-                  <div class="text-[30px] sm:text-[38px] leading-none md:text-[44px] my-1" style="color:#f2c06e;font-family:&quot;Clicker Script&quot;, &quot;Alex Brush&quot;, ChungDoiIndic, cursive">&amp;</div>
-                  <h3 class="w-[90%] min-h-[64px] sm:min-h-[76px] flex items-center justify-center whitespace-nowrap" style="font-size:clamp(26px, calc(0.075 * var(--st-w)), 44px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Nidhi</h3>
-                  <div class="uppercase text-[10px] sm:text-[12px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Bride</span></div>
+                  <h3 class="w-[80%] min-h-[80px] flex items-center justify-center leading-[54px] md:leading-[72px] whitespace-nowrap" style="font-size:clamp(26px, calc(0.072 * var(--st-w)), 42px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Shubhanil </h3>
+                  <div class="uppercase text-[10px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Groom</span></div>
+                  <div class="text-[35px] leading-none md:text-[47px]" style="color:#f2c06e;font-family:&quot;Clicker Script&quot;, &quot;Alex Brush&quot;, ChungDoiIndic, cursive">&amp;</div>
+                  <h3 class="w-[80%] min-h-[80px] flex items-center justify-center leading-[54px] md:leading-[72px] whitespace-nowrap" style="font-size:clamp(26px, calc(0.072 * var(--st-w)), 42px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Nidhi</h3>
+                  <div class="uppercase text-[10px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Bride</span></div>
                 </div>
                 <div class="flex w-full flex-col items-center" style="margin-top:calc(0.04535 * var(--st-w));gap:calc(0.04989 * var(--st-w))">
                   <div class="relative flex flex-col items-center gap-[6px] text-center md:gap-2" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">
-                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[14px] sm:text-[17px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]">TILK, HALDI, MARWA MATKOR CEREMONY AT - MUZAFFARPUR (HOME)</span></div>
+                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[16px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]" style="font-size:clamp(14px, calc(0.034 * var(--st-w)), 20px)">TILK, HALDI, MARWA MATKOR CEREMONY AT - MUZAFFARPUR (HOME)</span></div>
                     <div class="flex w-full max-w-[165px] md:max-w-[230px] items-center justify-between text-[12px] md:text-[16px] uppercase whitespace-nowrap min-w-max gap-x-3" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span>AT 10:00 AM</span><span><span dir="auto">FRIDAY</span></span></div>
                     <div class="flex items-center gap-[9px] md:gap-3" style="color:#f2c06e">
-                      <span class="text-[48px] sm:text-[57px] md:text-[72px] leading-none" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">20</span>
-                      <div class="h-[42px] sm:h-[46px] w-[1px] md:h-[60px]" style="background-color:#f2c06e;opacity:0.8"></div>
+                      <span class="text-[57px] md:text-[76px] leading-none" style="font-size:clamp(46px, calc(0.12 * var(--st-w)), 72px);color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">20</span>
+                      <div class="h-[46px] w-[1px] md:h-[62px]" style="background-color:#f2c06e;opacity:0.8"></div>
                       <div class="flex flex-col items-start justify-center gap-1 text-left">
-                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
-                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
                       </div>
                     </div>
                   </div>
                   <div class="relative flex flex-col items-center gap-[6px] text-center md:gap-2" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">
-                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[14px] sm:text-[17px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]">WEDDING CEREMONY AT -
+                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[16px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]" style="font-size:clamp(14px, calc(0.034 * var(--st-w)), 20px)">WEDDING CEREMONY AT -
 KALYAN LAWN
 Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></div>
                     <div class="flex w-full max-w-[165px] md:max-w-[230px] items-center justify-between text-[12px] md:text-[16px] uppercase whitespace-nowrap min-w-max gap-x-3" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span>AT 6:00 PM</span><span><span dir="auto">WEDNESDAY</span></span></div>
                     <div class="flex items-center gap-[9px] md:gap-3" style="color:#f2c06e">
-                      <span class="text-[48px] sm:text-[57px] md:text-[72px] leading-none" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">25</span>
-                      <div class="h-[42px] sm:h-[46px] w-[1px] md:h-[60px]" style="background-color:#f2c06e;opacity:0.8"></div>
+                      <span class="text-[57px] md:text-[76px] leading-none" style="font-size:clamp(46px, calc(0.12 * var(--st-w)), 72px);color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">25</span>
+                      <div class="h-[46px] w-[1px] md:h-[62px]" style="background-color:#f2c06e;opacity:0.8"></div>
                       <div class="flex flex-col items-start justify-center gap-1 text-left">
-                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
-                        <span class="text-[15px] sm:text-[17px] md:text-[22px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
                       </div>
                     </div>
                   </div>
@@ -305,62 +328,94 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
                       <p>Calculating...</p>
                     </div>
                   </div>
-                  <div class="relative mx-auto mt-7 md:mt-9 w-full max-w-[240px] sm:max-w-[270px] md:max-w-[320px] pt-[46px] pb-[46px] sm:pt-[54px] sm:pb-[54px] md:pt-[64px] md:pb-[64px]">
-                    <img src="/images/themes/mandap-darkred/calendar-frame.webp" aria-hidden="true" alt="" style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);width:min(calc(100% + 145px), 92vw);max-width:none;height:auto;pointer-events:none;z-index:0"/>
-                    <div style="position:relative;z-index:1">
-                      <div dir="ltr" data-showcase-keep="" class="w-full max-w-[280px] md:max-w-[310px] mx-auto rounded-lg overflow-hidden !max-w-none w-full" style="color:#f2c06e">
-                        <div class="text-center py-2.5 text-[15px] md:text-[19px] font-bold tracking-wide border-b" style="border-color:color-mix(in srgb, #f2c06e 27%, transparent);font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;color:#f2c06e">November 2026</div>
-                        <div class="grid grid-cols-7 border-b-2" style="border-color:#f2c06e">
-                          <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">Mo</div>
-                          <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">Tu</div>
-                          <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">We</div>
-                          <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">Th</div>
-                          <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">Fr</div>
-                          <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">Sa</div>
-                          <div class="text-center py-1.5 text-[10px] md:text-[11px] font-medium opacity-60">Su</div>
+                  <!-- Royal Framed Wedding Calendar -->
+                  <div class="royal-calendar-wrapper">
+                    <img src="/images/themes/mandap-darkred/calendar-frame.webp" aria-hidden="true" alt="" class="royal-calendar-frame-img"/>
+                    <div class="royal-calendar-inner" dir="ltr" data-showcase-keep="">
+                      <div class="royal-cal-header">
+                        <span class="royal-cal-title">November 2026</span>
+                        <span class="royal-cal-subtitle">Auspicious Wedding Month</span>
+                      </div>
+                      <div class="grid grid-cols-7 royal-cal-weekdays">
+                        <div class="royal-cal-wd">Mo</div>
+                        <div class="royal-cal-wd">Tu</div>
+                        <div class="royal-cal-wd">We</div>
+                        <div class="royal-cal-wd">Th</div>
+                        <div class="royal-cal-wd">Fr</div>
+                        <div class="royal-cal-wd">Sa</div>
+                        <div class="royal-cal-wd">Su</div>
+                      </div>
+                      <div class="grid grid-cols-7 royal-cal-grid">
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"><span>1</span></div>
+                        <div class="royal-cal-cell"><span>2</span></div>
+                        <div class="royal-cal-cell"><span>3</span></div>
+                        <div class="royal-cal-cell"><span>4</span></div>
+                        <div class="royal-cal-cell"><span>5</span></div>
+                        <div class="royal-cal-cell"><span>6</span></div>
+                        <div class="royal-cal-cell"><span>7</span></div>
+                        <div class="royal-cal-cell"><span>8</span></div>
+                        <div class="royal-cal-cell"><span>9</span></div>
+                        <div class="royal-cal-cell"><span>10</span></div>
+                        <div class="royal-cal-cell"><span>11</span></div>
+                        <div class="royal-cal-cell"><span>12</span></div>
+                        <div class="royal-cal-cell"><span>13</span></div>
+                        <div class="royal-cal-cell"><span>14</span></div>
+                        <div class="royal-cal-cell"><span>15</span></div>
+                        <div class="royal-cal-cell"><span>16</span></div>
+                        <div class="royal-cal-cell"><span>17</span></div>
+                        <div class="royal-cal-cell"><span>18</span></div>
+                        <div class="royal-cal-cell"><span>19</span></div>
+                        <div class="royal-cal-cell">
+                          <button type="button" class="royal-cal-haldi-btn" onclick="showRoyalToast('✨ Friday, Nov 20, 2026 (10:00 AM) — Tilk, Haldi & Marwa Matkor Ceremony at Muzaffarpur')" title="Tilak, Haldi & Marwa Matkor Ceremony">
+                            <span>20</span>
+                          </button>
                         </div>
-                        <div class="grid grid-cols-7 gap-y-0.5 px-1 py-2">
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">1</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">2</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">3</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">4</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">5</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">6</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">7</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">8</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">9</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">10</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">11</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">12</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">13</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">14</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">15</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">16</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">17</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">18</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">19</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">20</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">21</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">22</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">23</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">24</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><div class="relative w-[26px] h-[24px] md:w-[30px] md:h-[28px] flex items-center justify-center"><img src="/images/themes/mandap-darkred/heart.svg" alt="" aria-hidden="true" class="absolute inset-0 w-full h-full object-contain"/><span class="relative z-10 text-[11px] md:text-[12px] font-bold" style="color:#ffffff">25</span></div></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">26</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">27</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">28</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">29</span></div>
-                          <div class="flex items-center justify-center h-[28px] sm:h-[30px] md:h-[34px]"><span class="text-[12px] md:text-[13px]">30</span></div>
+                        <div class="royal-cal-cell"><span>21</span></div>
+                        <div class="royal-cal-cell"><span>22</span></div>
+                        <div class="royal-cal-cell"><span>23</span></div>
+                        <div class="royal-cal-cell"><span>24</span></div>
+                        <div class="royal-cal-cell">
+                          <button type="button" class="royal-cal-wedding-btn" onclick="showRoyalToast('💍 Wednesday, Nov 25, 2026 (5:00 PM) — Wedding Ceremony at Kalyan Lawn, Lucknow')" title="Wedding Ceremony at Kalyan Lawn, Lucknow">
+                            <img src="/images/themes/mandap-darkred/heart.svg" alt="" aria-hidden="true" class="royal-cal-heart-img"/>
+                            <span class="royal-cal-wedding-num">25</span>
+                          </button>
                         </div>
+                        <div class="royal-cal-cell"><span>26</span></div>
+                        <div class="royal-cal-cell"><span>27</span></div>
+                        <div class="royal-cal-cell"><span>28</span></div>
+                        <div class="royal-cal-cell"><span>29</span></div>
+                        <div class="royal-cal-cell"><span>30</span></div>
                       </div>
                     </div>
                   </div>
-                  <a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Dr.Shubhanil%20%26%20Dr.Nidhi%27s%20Wedding%20Celebration&amp;dates=20261125T113000Z/20261125T173000Z&amp;ctz=Asia/Calcutta&amp;details=Join%20us%20to%20celebrate%20the%20marriage%20of%20Dr.Shubhanil%20%26%20Dr.Nidhi%20at%20Kalyan%20Lawn%2C%20Lucknow%20-%20https%3A%2F%2Fmaps.app.goo.gl%2F775D5bTizAvwEypB9&amp;location=Kalyan%20Lawn%2C%20Police%20Chowki%2C%20Raebareli%20Rd%2C%20opposite%20South%20City%2C%20New%20Defence%20Colony%2C%20Lucknow%2C%20Uttar%20Pradesh%20226029" target="_blank" rel="noopener noreferrer" class="mt-3 inline-flex items-center justify-center text-[13px] underline decoration-1 underline-offset-4 transition-opacity hover:opacity-70 md:text-[15px]" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif" data-showcase-join-prev=""><span dir="auto">Add to Calendar</span></a>
+
+                  <!-- Interactive Ceremony Date Legend (Below Frame) -->
+                  <div class="royal-cal-legend">
+                    <button type="button" class="royal-cal-legend-item" onclick="showRoyalToast('✨ Friday, Nov 20, 2026 (10:00 AM) — Tilk, Haldi & Marwa Matkor Ceremony at Muzaffarpur')">
+                      <span class="royal-cal-dot-haldi"></span>
+                      <span>20 Nov: Tilak &amp; Haldi</span>
+                    </button>
+                    <button type="button" class="royal-cal-legend-item" onclick="showRoyalToast('💍 Wednesday, Nov 25, 2026 (5:00 PM) — Wedding Ceremony at Kalyan Lawn, Lucknow')">
+                      <span class="royal-cal-dot-wedding">❤️</span>
+                      <span>25 Nov: Wedding Day</span>
+                    </button>
+                  </div>
+
+                  <a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Dr.Shubhanil%20%26%20Dr.Nidhi%27s%20Wedding%20Celebration&amp;dates=20261125T113000Z/20261125T173000Z&amp;ctz=Asia/Calcutta&amp;details=Join%20us%20to%20celebrate%20the%20marriage%20of%20Dr.Shubhanil%20%26%20Dr.Nidhi%20at%20Kalyan%20Lawn%2C%20Lucknow%20-%20https%3A%2F%2Fmaps.app.goo.gl%2F775D5bTizAvwEypB9&amp;location=Kalyan%20Lawn%2C%20Police%20Chowki%2C%20Raebareli%20Rd%2C%20opposite%20South%20City%2C%20New%20Defence%20Colony%2C%20Lucknow%2C%20Uttar%20Pradesh%20226029" target="_blank" rel="noopener noreferrer" class="royal-add-calendar-btn" data-showcase-join-prev="">
+                    <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span dir="auto">Add to Google Calendar</span>
+                  </a>
                 </div>
                 <img src="/images/themes/mandap-darkred/goldenline-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none mx-auto block h-auto max-w-none object-contain" style="width:calc(0.65986 * var(--st-w));margin-top:calc(0.04082 * var(--st-w))" loading="lazy" decoding="async"/>
               </div>
@@ -369,7 +424,7 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
             <!-- Section 5: Confirm Attendance (RSVP) Button -->
             <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w));padding-inline:8.503%">
               <div class="relative z-10 flex w-full flex-col items-center justify-center" data-landing-screenshot-id="invite-rsvp">
-                <button type="button" id="confirm-attendance-btn" onclick="openGuestRsvpModal()" class="inline-flex items-center justify-center rounded-full px-7 py-[9px] text-[13px] font-semibold uppercase tracking-[0.04em] transition-transform hover:scale-[1.03] md:text-[15px] cursor-pointer shadow-lg" style="background-color:#f2c06e;color:#764c4d;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif">
+                <button type="button" id="confirm-attendance-btn" onclick="openGuestRsvpModal()" class="inline-flex items-center justify-center rounded-full px-7 py-[8px] text-[13px] font-semibold uppercase tracking-[0.04em] transition-transform hover:scale-[1.03] md:text-[15px] cursor-pointer shadow-lg" style="background-color:#f2c06e;color:#764c4d;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif">
                   <span class="relative z-10 flex min-h-0 items-center justify-center gap-2"><span dir="auto">CONFIRM ATTENDANCE</span></span>
                 </button>
               </div>
@@ -378,9 +433,9 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
             <!-- Section 6: Wedding Venue & Location Map -->
             <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
               <div class="flex w-full flex-col items-center">
-                <section class="relative flex w-full flex-col items-center gap-3 px-4 sm:px-6 md:gap-4 md:px-8" data-landing-screenshot-id="invite-map">
+                <section class="relative flex w-full flex-col items-center gap-3 px-4 md:gap-4 md:px-8" data-landing-screenshot-id="invite-map">
                   <div class="relative text-center w-full" style="max-width: 580px; margin: 0 auto;">
-                    <h3 class="uppercase font-bold text-[19px] sm:text-[22px] md:text-[26px] text-center" style="color:#f2c06e;font-family:'Times New Roman', Times, serif;letter-spacing:0.04em;margin-bottom:8px;">
+                    <h3 class="uppercase font-bold text-[20px] md:text-[26px] text-center" style="color:#f2c06e;font-family:'Times New Roman', Times, serif;letter-spacing:0.04em;margin-bottom:8px;">
                       Wedding Venue &amp; Location
                     </h3>
                     <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block;">
@@ -410,15 +465,15 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
                     <!-- Direct Exact Google Maps Link Buttons -->
                     <div class="venue-map-actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; width:100%;">
                       <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" 
-                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-5 sm:px-6 py-2.5 text-xs sm:text-sm md:text-base font-bold transition-transform hover:scale-105" 
+                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm md:text-base font-bold transition-transform hover:scale-105" 
                          style="background:linear-gradient(135deg, #ffd98a, #cca04a); color:#4a0206; box-shadow:0 4px 15px rgba(242,192,110,0.4); text-decoration:none;">
-                        <svg class="h-4 w-4 sm:h-5 sm:w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
                         </svg>
                         <span>Open in Google Maps</span>
                       </a>
                       <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" 
-                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-5 sm:px-6 py-2.5 text-xs sm:text-sm md:text-base font-semibold transition-transform hover:scale-105" 
+                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm md:text-base font-semibold transition-transform hover:scale-105" 
                          style="background:rgba(242,192,110,0.2); border:1px solid #f2c06e; color:#ffdfaf; text-decoration:none;">
                         <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                           <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
@@ -434,15 +489,15 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
             <!-- Section 7: Wedding Day Schedule -->
             <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
-              <div class="relative z-10 flex w-full flex-col items-center px-[8%] sm:px-[12%] md:px-[15%]">
-                <h2 class="uppercase font-bold text-[19px] sm:text-[22px] md:text-[26px] text-center mb-5" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">WEDDING DAY SCHEDULE</span></h2>
-                <ol class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-4 sm:gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-10" style="font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;padding-top:12px;padding-bottom:12px">
+              <div class="relative z-10 flex w-full flex-col items-center px-[14%] md:px-[17%]">
+                <h2 class="uppercase font-bold text-[20px] md:text-[26px] text-center mb-5" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">WEDDING DAY SCHEDULE</span></h2>
+                <ol class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-4 md:gap-x-8 gap-y-8 md:gap-y-10" style="font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;padding-top:12px;padding-bottom:12px">
                   <li class="contents">
-                    <span class="pt-0.5 text-right text-[13px] sm:text-[15px] md:text-[17px] tabular-nums tracking-wide leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">
+                    <span class="pt-0.5 text-right text-[13px] md:text-[17px] tabular-nums tracking-wide leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">
                       <span class="relative inline-block">
-                        <span aria-hidden="true" class="absolute top-1/2 flex w-max items-center justify-center -translate-y-1/2 right-full" style="margin-right:clamp(8px, 3vw, 32px)">
-                          <span class="flex w-[44px] sm:w-[68px] md:w-[88px] justify-center">
-                            <img src="/images/themes/mandap-darkred/wreath.webp" alt="" aria-hidden="true" class="w-[38px] sm:w-[50px] md:w-[64px] h-auto max-w-none object-contain" loading="lazy" decoding="async"/>
+                        <span aria-hidden="true" class="absolute top-1/2 flex w-max items-center justify-center -translate-y-1/2 right-full" style="margin-right:clamp(8px, 2.8vw, 28px)">
+                          <span class="flex w-[52px] md:w-[95px] justify-center">
+                            <img src="/images/themes/mandap-darkred/wreath.webp" alt="" aria-hidden="true" class="w-[38px] md:w-[66px] h-auto max-w-none object-contain" loading="lazy" decoding="async"/>
                           </span>
                         </span>5:00 PM
                       </span>
@@ -451,15 +506,15 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
                       <span class="absolute left-1/2 -translate-x-1/2 w-px top-1/2 bottom-1/2" style="background-color:color-mix(in srgb, #f2c06e 40%, transparent)"></span>
                       <span class="relative block h-2.5 w-2.5 rounded-full" style="background-color:#f2c06e;box-shadow:0 0 0 2px color-mix(in srgb, #f2c06e 13%, transparent)"></span>
                     </span>
-                    <span class="text-[13px] sm:text-[15px] md:text-[17px] leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">Barat Will be headed towards Wedding Venue From Residence lko</span></span>
+                    <span class="text-[13px] md:text-[17px] leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">Barat Will be headed towards Wedding Venue From Residence lko</span></span>
                   </li>
                 </ol>
               </div>
             </section>
 
             <!-- Footer -->
-            <footer class="relative w-full">
-              <div class="relative z-10 flex w-full flex-col items-center text-center">
+            <footer class="relative w-full" style="padding-bottom: 36px;">
+              <div class="relative z-10 flex w-full flex-col items-center text-center px-4">
                 <span class="whitespace-pre-line flex flex-col items-center gap-1 text-[11px] md:text-[15px] mx-auto md:max-w-[560px]" style="color:#f2c06e;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif;margin-top:calc(0.05215 * var(--st-w))"><span dir="auto">Your presence would be the greatest gift we could receive!</span></span>
               </div>
             </footer>
@@ -965,6 +1020,263 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
   @keyframes toast-in {
     from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ================= ROYAL FRAMED CALENDAR UI & UX ================= */
+  .royal-calendar-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 355px;
+    margin: 24px auto 10px auto;
+    padding: 44px 36px 44px 36px;
+    box-sizing: border-box;
+  }
+
+  .royal-calendar-frame-img {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: fill;
+    pointer-events: none;
+    z-index: 2;
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+  }
+
+  .royal-calendar-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(88, 3, 8, 0.55) 0%, transparent 90%);
+    border-radius: 6px;
+    padding: 4px 6px 4px 6px;
+    color: #f2c06e;
+  }
+
+  .royal-cal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(242, 192, 110, 0.3);
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .royal-cal-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #ffd98a;
+    line-height: 1.2;
+  }
+
+  .royal-cal-subtitle {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255, 223, 175, 0.75);
+    margin-top: 2px;
+  }
+
+  .royal-cal-weekdays {
+    border-bottom: 1.5px solid rgba(242, 192, 110, 0.65);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+
+  .royal-cal-wd {
+    text-align: center;
+    padding: 3px 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255, 223, 175, 0.78);
+  }
+
+  .royal-cal-grid {
+    row-gap: 1px;
+    padding: 2px 0;
+  }
+
+  .royal-cal-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 27px;
+    font-size: 0.8rem;
+    font-family: "Times New Roman", Times, serif;
+    color: #ffdfaf;
+  }
+
+  .royal-cal-haldi-btn {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(242, 192, 110, 0.3), rgba(204, 160, 74, 0.15));
+    border: 1.5px dashed #ffd98a;
+    color: #ffd98a;
+    font-weight: 700;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 10px rgba(242, 192, 110, 0.35);
+  }
+
+  .royal-cal-haldi-btn:hover {
+    transform: scale(1.14);
+    box-shadow: 0 0 14px rgba(242, 192, 110, 0.65);
+  }
+
+  .royal-cal-wedding-btn {
+    position: relative;
+    width: 29px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    animation: cal-heart-pulse 2.2s ease-in-out infinite;
+  }
+
+  .royal-cal-heart-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(255, 80, 80, 0.6));
+  }
+
+  .royal-cal-wedding-num {
+    position: relative;
+    z-index: 2;
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  @keyframes cal-heart-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.13); }
+  }
+
+  .royal-cal-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 4px auto 10px auto;
+  }
+
+  .royal-cal-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(242, 192, 110, 0.14);
+    border: 1px solid rgba(242, 192, 110, 0.38);
+    border-radius: 9999px;
+    padding: 4px 11px;
+    font-size: 0.72rem;
+    color: #ffdfaf;
+    cursor: pointer;
+    font-family: "Times New Roman", Times, serif;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .royal-cal-legend-item:hover {
+    background: rgba(242, 192, 110, 0.26);
+    transform: translateY(-1px);
+  }
+
+  .royal-cal-dot-haldi {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffd98a;
+    border: 1px solid #fff;
+    display: inline-block;
+  }
+
+  .royal-cal-dot-wedding {
+    font-size: 0.72rem;
+    line-height: 1;
+  }
+
+  .royal-add-calendar-btn {
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 9999px;
+    background: rgba(242, 192, 110, 0.16);
+    border: 1px solid #f2c06e;
+    color: #ffd98a;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  .royal-add-calendar-btn:hover {
+    background: rgba(242, 192, 110, 0.28);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(242, 192, 110, 0.25);
+  }
+
+  @media (min-width: 640px) {
+    .royal-calendar-wrapper {
+      max-width: 410px;
+      padding: 50px 42px 50px 42px;
+    }
+    .royal-cal-title {
+      font-size: 1.22rem;
+    }
+    .royal-cal-cell {
+      height: 31px;
+      font-size: 0.86rem;
+    }
+    .royal-cal-haldi-btn {
+      width: 28px;
+      height: 28px;
+      font-size: 0.82rem;
+    }
+    .royal-cal-wedding-btn {
+      width: 32px;
+      height: 30px;
+    }
+    .royal-cal-legend-item {
+      font-size: 0.76rem;
+      padding: 5px 13px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .royal-calendar-wrapper {
+      max-width: 305px;
+      padding: 36px 28px 36px 28px;
+    }
+    .royal-cal-cell {
+      height: 24px;
+      font-size: 0.74rem;
+    }
   }
 
   /* ================= MULTI-DEVICE RESPONSIVE DESIGN ================= */

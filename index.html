@@ -172,7 +172,7 @@
 
       <!-- Envelope Card -->
       <div style="z-index:10" class="jsx-353cb38c53e4a74a relative px-3 w-full flex justify-center">
-        <div class="jsx-353cb38c53e4a74a relative w-full max-w-[340px] sm:max-w-[400px] md:max-w-[520px] lg:max-w-[580px]" id="envelope-card-wrapper" style="transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease;">
+        <div class="jsx-353cb38c53e4a74a relative w-full max-w-[340px] md:max-w-[520px] lg:max-w-[580px]" id="envelope-card-wrapper" style="transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease;">
           <div style="top:44px;width:54px;height:54px;transform:translate(-50%, -50%);background:radial-gradient(circle at 30% 30%, #f2c06e, rgb(212, 162, 80));--shadow-color:rgba(242, 192, 110, 0.5);box-shadow:0 4px 20px rgba(242, 192, 110, 0.5), inset 0 2px 4px rgba(255,255,255,0.3);z-index:30;animation:seal-pulse 2s ease-in-out infinite" class="jsx-353cb38c53e4a74a absolute left-1/2 rounded-full flex items-center justify-center">
             <svg style="fill:#764c4d" viewBox="0 0 24 24" class="jsx-353cb38c53e4a74a w-7 h-7"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" class="jsx-353cb38c53e4a74a"></path></svg>
           </div>
@@ -181,7 +181,7 @@
               <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="jsx-353cb38c53e4a74a absolute pointer-events-none h-150 md:h-150 lg:h-150 w-auto max-w-none top-[-13%] left-[-24px] md:left-[-24px] -scale-x-100 -translate-x-[6%] md:-translate-x-[10%] opacity-15"/>
               <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="jsx-353cb38c53e4a74a absolute pointer-events-none h-150 md:h-150 lg:h-150 w-auto max-w-none top-[-13%] right-[-24px] md:right-[-24px] translate-x-[6%] md:translate-x-[10%] opacity-15 scale-x-100"/>
             </div>
-            <div class="jsx-353cb38c53e4a74a relative z-10 text-center px-5 sm:px-8 pt-24 pb-10 sm:pt-26 sm:pb-12 md:pt-24 md:pb-10">
+            <div class="jsx-353cb38c53e4a74a relative z-10 text-center px-5 sm:px-8 pt-24 pb-10 sm:pb-12 md:pt-24 md:pb-10">
               <h1 style="color:#f2c06e;font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive" class="jsx-353cb38c53e4a74a mb-2 flex flex-col items-center leading-tight">
                 <span style="font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;font-size:clamp(26px, 6.5vw, 38px)" class="jsx-353cb38c53e4a74a block w-full text-center">Dr.Shubhanil</span>
                 <span style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive;font-size:clamp(18px, 4.5vw, 24px)" class="jsx-353cb38c53e4a74a block w-full text-center leading-none my-1">&amp;</span>
@@ -688,12 +688,33 @@
     box-sizing: border-box;
   }
 
+  #envelope-card-wrapper {
+    width: 100%;
+    max-width: min(92vw, 370px);
+  }
+  @media (min-width: 640px) {
+    #envelope-card-wrapper {
+      max-width: 440px;
+    }
+  }
+  @media (min-width: 768px) {
+    #envelope-card-wrapper {
+      max-width: 520px;
+    }
+  }
+  @media (min-width: 1024px) {
+    #envelope-card-wrapper {
+      max-width: 560px;
+    }
+  }
+
   /* Landscape phones & short viewports: allow smooth vertical scroll on envelope */
   @media (max-height: 620px) {
-    #envelope-card-wrapper {
+    [data-landing-screenshot-id="invite-envelope"] {
       overflow-y: auto !important;
       overflow-x: hidden !important;
-      padding: 12px 0;
+      align-items: flex-start !important;
+      padding: 48px 0 24px 0 !important;
     }
   }
 
