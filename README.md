@@ -1,4 +1,4 @@
-# 💍 Dr. Shubhanil & Dr. Nidhi — Wedding Invitation
+# 💍 Dr. Shubhanil & Dr. Nidhi — Royal Wedding Invitation
 
 > **"Two souls, one heart, together forever."**  
 > We joyfully invite you to celebrate the wedding ceremony of **Dr. Shubhanil & Dr. Nidhi** on **Wednesday, November 25, 2026** in Lucknow, Uttar Pradesh.
@@ -30,20 +30,25 @@
 
 ## ✨ Features
 
-- 💌 **Royal Mandap Theme:** Dark Red & Gold regal aesthetic with ambient falling flower petals.
-- ✉️ **Interactive Wax Seal Envelope:** Smooth opening animation transitioning into the full card.
+- 💌 **Full-Screen Royal Mandap Theme:** Deep crimson & gold theme filled seamlessly across entire viewport (zero white borders/sidebars).
+- ✉️ **Interactive Wax Seal Envelope:** Smooth opening transition into the main celebration card.
+- 👑 **Admin Portal (Top-Right):**
+  - **Login Button:** Dedicated discrete `Admin Login` button in top-right corner.
+  - **Credentials:**
+    - **Username:** `admin`
+    - **Password:** `adminsanjeev##`
+  - **Dashboard:** Real-time metrics (Total responses, Attending count, Total guests/headcount, Declined count).
+  - **Management:** View attendee wishes, add guests manually, delete entries, and 1-click **Export to CSV / Excel**.
+- 📝 **Guest RSVP Tracking:** Guests click *Confirm Attendance* on the card to submit their name, headcount, and wishes.
 - ⏳ **Live Countdown Timer:** Counting down to November 25, 2026 (17:00 IST).
-- 🎵 **Background Shehnai / Wedding Melodies:** Subtle ambient music with a floating toggle control.
+- 🎵 **Background Shehnai / Wedding Melodies:** Royal ambient music with floating play/pause control.
 - 🖼️ **Photo Moments:** Curated couple photo gallery with responsive lightbox preview.
 - 🗺️ **Venue Navigation:** Integrated Google Maps navigation.
-- 📱 **Mobile & Desktop Optimized:** Fully responsive across all devices and screen sizes.
-- 🚀 **100% Clean UI:** Third-party vendor headers, login buttons, and chat widgets removed.
+- 🚀 **100% Clean UI:** All vendor headers, login buttons, and chat widgets removed.
 
 ---
 
 ## 💻 Local Development
-
-To run the invitation locally:
 
 ```bash
 # Clone the repository
@@ -54,26 +59,27 @@ cd wedding
 node server.js
 ```
 
-Then visit:
-- **Default Envelope View:** [http://localhost:3000](http://localhost:3000)
+Open:
+- **Envelope Cover View:** [http://localhost:3000](http://localhost:3000)
 - **Direct Opened View:** [http://localhost:3000/?open=1](http://localhost:3000/?open=1)
+- **Admin Login:** Click the `👑 Admin Login` button in top-right corner.
 
 ---
 
 ## ☁️ Vercel Deployment
 
-This project is pre-configured for **1-click Vercel deployment** via [`vercel.json`](./vercel.json).
+This repository is pre-configured for **1-click Vercel deployment** via [`vercel.json`](./vercel.json).
 
-### Method 1: Deploy with Vercel CLI
+### Method 1: Import from GitHub
+1. Go to [vercel.com/new](https://vercel.com/new).
+2. Select your repository `ashish7802/wedding`.
+3. Click **Deploy**. Vercel will build and host your custom domain.
+
+### Method 2: Deploy with Vercel CLI
 ```bash
 npm install -g vercel
 vercel
 ```
-
-### Method 2: Import from GitHub
-1. Go to [vercel.com/new](https://vercel.com/new).
-2. Select and import `ashish7802/wedding`.
-3. Click **Deploy**. Vercel will instantly build and host your custom domain.
 
 ---
 

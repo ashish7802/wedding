@@ -1,0 +1,18 @@
+[
+  {
+    "id": "rsvp-1",
+    "name": "Dr. Rajesh & Family",
+    "attending": "yes",
+    "count": 4,
+    "message": "Heartiest congratulations to Dr. Shubhanil & Dr. Nidhi! Wishing both of you a wonderful married life.",
+    "createdAt": "2026-11-02T14:30:00.000Z"
+  },
+  {
+    "id": "rsvp-2",
+    "name": "Pooja Verma",
+    "attending": "yes",
+    "count": 2,
+    "message": "So happy for both of you! Excited to be part of the celebration in Lucknow.",
+    "createdAt": "2026-11-02T16:15:00.000Z"
+  }
+]
