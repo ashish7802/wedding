@@ -3,8 +3,42 @@
   "cleanUrls": true,
   "rewrites": [
     {
+      "source": "/",
+      "has": [
+        {
+          "type": "query",
+          "key": "open",
+          "value": "1"
+        }
+      ],
+      "destination": "/open.html"
+    },
+    {
+      "source": "/i/drshubhanil-drnidhi-love",
+      "has": [
+        {
+          "type": "query",
+          "key": "open",
+          "value": "1"
+        }
+      ],
+      "destination": "/open.html"
+    },
+    {
       "source": "/open",
       "destination": "/open.html"
+    },
+    {
+      "source": "/i/drshubhanil-drnidhi-love",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/api/rsvp/:id",
+      "destination": "/api/rsvps?id=:id"
+    },
+    {
+      "source": "/api/rsvp",
+      "destination": "/api/rsvps"
     },
     {
       "source": "/_next/:path*",
@@ -24,3 +58,4 @@
     }
   ]
 }
+

@@ -3,7 +3,8 @@ const https = require('https');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 3000;
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = '0.0.0.0';
 const UPSTREAM = 'https://chungdoi.com';
 const RSVPS_FILE = path.join(__dirname, 'rsvps.json');
 
@@ -26,7 +27,8 @@ const MIME_TYPES = {
 function getRsvps() {
   try {
     if (fs.existsSync(RSVPS_FILE)) {
-      return JSON.parse(fs.readFileSync(RSVPS_FILE, 'utf8'));
+      const parsed = JSON.parse(fs.readFileSync(RSVPS_FILE, 'utf8'));
+      if (Array.isArray(parsed)) return parsed;
     }
   } catch (e) {
     console.error('Error reading rsvps.json:', e);
@@ -47,23 +49,48 @@ const server = http.createServer((req, res) => {
   const pathname = decodeURIComponent(urlObj.pathname);
   const isOpen = urlObj.searchParams.get('open') === '1';
 
+  // CORS preflight
+  if (req.method === 'OPTIONS') {
+    res.writeHead(200, {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type'
+    });
+    res.end();
+    return;
+  }
+
   // 1. API Routes for RSVP Management
-  if (pathname === '/api/rsvps' && req.method === 'GET') {
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+  if ((pathname === '/api/rsvps' || pathname === '/api/rsvp') && req.method === 'GET') {
+    res.writeHead(200, {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Cache-Control': 'no-store, no-cache, must-revalidate'
+    });
     res.end(JSON.stringify(getRsvps()));
     return;
   }
 
-  if (pathname === '/api/rsvp' && req.method === 'POST') {
+  if ((pathname === '/api/rsvp' || pathname === '/api/rsvps') && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk; });
     req.on('end', () => {
       try {
-        const item = JSON.parse(body);
-        item.id = 'rsvp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6);
-        item.createdAt = new Date().toISOString();
+        const parsed = body ? JSON.parse(body) : {};
+        const item = {
+          id: parsed.id || ('rsvp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6)),
+          name: (parsed.name || 'Anonymous Guest').toString().trim(),
+          attending: parsed.attending === 'no' ? 'no' : 'yes',
+          count: parsed.attending === 'no' ? 0 : Math.max(1, parseInt(parsed.count, 10) || 1),
+          message: (parsed.message || '').toString().trim(),
+          createdAt: parsed.createdAt || new Date().toISOString()
+        };
         const list = getRsvps();
-        list.unshift(item);
+        const existingIdx = list.findIndex(r => String(r.id) === String(item.id));
+        if (existingIdx !== -1) {
+          list[existingIdx] = item;
+        } else {
+          list.unshift(item);
+        }
         saveRsvps(list);
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.end(JSON.stringify({ success: true, item, list }));
@@ -75,19 +102,35 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  if (pathname.startsWith('/api/rsvp/') && req.method === 'DELETE') {
-    const id = pathname.replace('/api/rsvp/', '');
+  if (
+    (pathname.startsWith('/api/rsvp/') || pathname.startsWith('/api/rsvps/') || pathname === '/api/rsvp' || pathname === '/api/rsvps') &&
+    req.method === 'DELETE'
+  ) {
+    let id = urlObj.searchParams.get('id');
+    if (!id && pathname.startsWith('/api/rsvp/')) {
+      id = pathname.replace('/api/rsvp/', '');
+    } else if (!id && pathname.startsWith('/api/rsvps/')) {
+      id = pathname.replace('/api/rsvps/', '');
+    }
     let list = getRsvps();
-    list = list.filter(r => r.id !== id);
-    saveRsvps(list);
+    if (id) {
+      list = list.filter(r => String(r.id) !== String(id));
+      saveRsvps(list);
+    }
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ success: true, list }));
     return;
   }
 
   // 2. Root / Invitation HTML paths
-  if (pathname === '/' || pathname === '/index.html' || pathname === '/open' || pathname === '/i/drshubhanil-drnidhi-love') {
-    const fileToServe = (isOpen || pathname === '/open') ? 'open.html' : 'index.html';
+  if (
+    pathname === '/' ||
+    pathname === '/index.html' ||
+    pathname === '/open' ||
+    pathname === '/open.html' ||
+    pathname === '/i/drshubhanil-drnidhi-love'
+  ) {
+    const fileToServe = (isOpen || pathname === '/open' || pathname === '/open.html') ? 'open.html' : 'index.html';
     const filePath = path.join(__dirname, fileToServe);
 
     fs.readFile(filePath, (err, content) => {
@@ -106,8 +149,9 @@ const server = http.createServer((req, res) => {
   }
 
   // 3. Local static files with CORRECT MIME TYPES
-  const localPath = path.join(__dirname, pathname);
-  if (fs.existsSync(localPath) && fs.statSync(localPath).isFile()) {
+  const safeRelPath = pathname.replace(/^\/+/, '');
+  const localPath = path.join(__dirname, safeRelPath);
+  if (localPath.startsWith(__dirname) && fs.existsSync(localPath) && fs.statSync(localPath).isFile()) {
     const ext = path.extname(localPath).toLowerCase();
     const mimeType = MIME_TYPES[ext] || 'application/octet-stream';
     res.writeHead(200, {
@@ -153,11 +197,12 @@ const server = http.createServer((req, res) => {
   }
 });
 
-server.listen(PORT, () => {
+server.listen(PORT, HOST, () => {
   console.log(`=======================================================`);
   console.log(`Wedding invitation server running at:`);
   console.log(`👉 http://localhost:${PORT}`);
-  console.log(`👉 http://localhost:${PORT}/?open=1  (Direct to opened card)`);
+  console.log(`👉 http://localhost:${PORT}/open  (Direct to opened card)`);
   console.log(`Admin credentials: user 'admin' | pass 'adminsanjeev##'`);
   console.log(`=======================================================`);
 });
+

@@ -1,0 +1,16 @@
+{
+  "name": "Dr. Shubhanil & Dr. Nidhi - Wedding Celebration",
+  "short_name": "Shubhanil & Nidhi",
+  "description": "We invite you to the wedding celebration of Dr. Shubhanil & Dr. Nidhi | Wednesday, November 25, 2026 at Kalyan Lawn, Lucknow",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#580308",
+  "theme_color": "#580308",
+  "icons": [
+    {
+      "src": "/images/themes/mandap-darkred/om-decoration.webp",
+      "sizes": "192x192",
+      "type": "image/webp"
+    }
+  ]
+}
