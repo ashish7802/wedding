@@ -7,6 +7,22 @@ const PORT = 3000;
 const UPSTREAM = 'https://chungdoi.com';
 const RSVPS_FILE = path.join(__dirname, 'rsvps.json');
 
+const MIME_TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.js': 'application/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.ttf': 'font/ttf',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2'
+};
+
 function getRsvps() {
   try {
     if (fs.existsSync(RSVPS_FILE)) {
@@ -28,7 +44,7 @@ function saveRsvps(data) {
 
 const server = http.createServer((req, res) => {
   const urlObj = new URL(req.url, `http://localhost:${PORT}`);
-  const pathname = urlObj.pathname;
+  const pathname = decodeURIComponent(urlObj.pathname);
   const isOpen = urlObj.searchParams.get('open') === '1';
 
   // 1. API Routes for RSVP Management
@@ -89,14 +105,20 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 3. Local static files
+  // 3. Local static files with CORRECT MIME TYPES
   const localPath = path.join(__dirname, pathname);
   if (fs.existsSync(localPath) && fs.statSync(localPath).isFile()) {
+    const ext = path.extname(localPath).toLowerCase();
+    const mimeType = MIME_TYPES[ext] || 'application/octet-stream';
+    res.writeHead(200, {
+      'Content-Type': mimeType,
+      'Cache-Control': 'public, max-age=31536000'
+    });
     fs.createReadStream(localPath).pipe(res);
     return;
   }
 
-  // 4. Proxy Next.js assets to upstream ChungDoi
+  // 4. Proxy Next.js assets to upstream ChungDoi as fallback
   const proxyUrl = new URL(req.url, UPSTREAM);
   const options = {
     hostname: proxyUrl.hostname,
