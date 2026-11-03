@@ -21,11 +21,6 @@
     {
       "source": "/backend-api/:path*",
       "destination": "https://chungdoi.com/backend-api/:path*"
-    },
-    {
-      "source": "/api/:path*",
-      "destination": "https://chungdoi.com/api/:path*"
     }
   ]
 }
-
