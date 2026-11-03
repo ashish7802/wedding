@@ -1,0 +1,19 @@
+{
+  "name": "dr-shubhanil-and-dr-nidhi-wedding",
+  "version": "1.0.0",
+  "description": "Royal Wedding Invitation of Dr. Shubhanil & Dr. Nidhi - November 25, 2026",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "wedding",
+    "invitation",
+    "shubhanil",
+    "nidhi",
+    "lucknow"
+  ],
+  "author": "",
+  "license": "MIT"
+}

@@ -1,0 +1,30 @@
+{
+  "version": 2,
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/open",
+      "destination": "/open.html"
+    },
+    {
+      "source": "/_next/:path*",
+      "destination": "https://chungdoi.com/_next/:path*"
+    },
+    {
+      "source": "/fonts/:path*",
+      "destination": "https://chungdoi.com/fonts/:path*"
+    },
+    {
+      "source": "/images/:path*",
+      "destination": "https://chungdoi.com/images/:path*"
+    },
+    {
+      "source": "/backend-api/:path*",
+      "destination": "https://chungdoi.com/backend-api/:path*"
+    },
+    {
+      "source": "/api/:path*",
+      "destination": "https://chungdoi.com/api/:path*"
+    }
+  ]
+}
