@@ -21,7 +21,9 @@ const MIME_TYPES = {
   '.ico': 'image/x-icon',
   '.ttf': 'font/ttf',
   '.woff': 'font/woff',
-  '.woff2': 'font/woff2'
+  '.woff2': 'font/woff2',
+  '.mp3': 'audio/mpeg',
+  '.m4a': 'audio/mp4'
 };
 
 function getRsvps() {

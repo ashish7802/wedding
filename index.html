@@ -1032,84 +1032,93 @@
     });
   };
 
-  // Synthesized Royal Indian Wedding Melody (Web Audio API)
-  let audioCtx = null;
+  // ================= WEDDING MUSIC: "Aaj Sajeya" =================
+  let weddingAudio = null;
   let isMusicPlaying = false;
-  let musicTimer = null;
 
-  function playWeddingNote(freq, duration, delay) {
-    if (!audioCtx || !isMusicPlaying) return;
-    const startTime = audioCtx.currentTime + delay;
-    const osc = audioCtx.createOscillator();
-    const subOsc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
+  function initWeddingAudio() {
+    if (!weddingAudio) {
+      weddingAudio = new Audio('/audio/aaj_sajeya.mp3');
+      weddingAudio.loop = true;
+      weddingAudio.preload = 'auto';
 
-    osc.type = 'triangle';
-    subOsc.type = 'sine';
-    osc.frequency.setValueAtTime(freq, startTime);
-    subOsc.frequency.setValueAtTime(freq * 0.5, startTime);
+      weddingAudio.addEventListener('play', () => {
+        isMusicPlaying = true;
+        sessionStorage.setItem('weddingMusicPlaying', 'true');
+        updateMusicButtonUI();
+      });
 
-    gain.gain.setValueAtTime(0.0001, startTime);
-    gain.gain.exponentialRampToValueAtTime(0.045, startTime + 0.08);
-    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+      weddingAudio.addEventListener('pause', () => {
+        isMusicPlaying = false;
+        sessionStorage.setItem('weddingMusicPlaying', 'false');
+        updateMusicButtonUI();
+      });
 
-    osc.connect(gain);
-    subOsc.connect(gain);
-    gain.connect(audioCtx.destination);
-
-    osc.start(startTime);
-    subOsc.start(startTime);
-    osc.stop(startTime + duration + 0.05);
-    subOsc.stop(startTime + duration + 0.05);
-  }
-
-  function scheduleMelodyLoop() {
-    if (!isMusicPlaying) return;
-    // Auspicious Raga Yaman / Bhopali inspired phrase (C4, D4, E4, G4, A4, C5)
-    const phrase = [
-      { f: 261.63, d: 0.65, t: 0.0 },
-      { f: 293.66, d: 0.65, t: 0.6 },
-      { f: 329.63, d: 0.90, t: 1.2 },
-      { f: 392.00, d: 0.70, t: 2.0 },
-      { f: 440.00, d: 0.90, t: 2.7 },
-      { f: 523.25, d: 1.20, t: 3.5 },
-      { f: 440.00, d: 0.70, t: 4.7 },
-      { f: 392.00, d: 0.90, t: 5.4 },
-      { f: 329.63, d: 0.75, t: 6.3 },
-      { f: 293.66, d: 0.75, t: 7.0 },
-      { f: 261.63, d: 1.30, t: 7.7 }
-    ];
-    phrase.forEach(n => playWeddingNote(n.f, n.d, n.t));
-    musicTimer = setTimeout(scheduleMelodyLoop, 9200);
+      weddingAudio.addEventListener('error', (e) => {
+        console.warn('[Wedding Audio error]', e);
+      });
+    }
+    return weddingAudio;
   }
 
   function updateMusicButtonUI() {
     const icon = document.getElementById('music-btn-icon');
     const label = document.getElementById('music-btn-label');
+    const btn = document.getElementById('music-floating-btn');
     if (icon) icon.textContent = isMusicPlaying ? '🎵' : '🔇';
-    if (label) label.textContent = isMusicPlaying ? 'Music On' : 'Music Off';
+    if (label) label.textContent = isMusicPlaying ? 'Aaj Sajeya' : 'Music Off';
+    if (btn) {
+      if (isMusicPlaying) {
+        btn.classList.add('music-playing');
+        btn.setAttribute('title', 'Playing: Aaj Sajeya (Click to pause)');
+      } else {
+        btn.classList.remove('music-playing');
+        btn.setAttribute('title', 'Play: Aaj Sajeya (Click to play)');
+      }
+    }
   }
 
   window.toggleWeddingMusic = function() {
-    try {
-      if (!audioCtx) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContextClass();
-      }
-      if (audioCtx.state === 'suspended') {
-        audioCtx.resume();
-      }
-      isMusicPlaying = !isMusicPlaying;
-      sessionStorage.setItem('weddingMusicPlaying', isMusicPlaying ? 'true' : 'false');
-      updateMusicButtonUI();
-      if (isMusicPlaying) {
-        clearTimeout(musicTimer);
-        scheduleMelodyLoop();
-      } else {
-        clearTimeout(musicTimer);
-      }
-    } catch (e) {}
+    const audio = initWeddingAudio();
+    if (isMusicPlaying) {
+      audio.pause();
+    } else {
+      audio.play().then(() => {
+        window.showRoyalToast('🎵 Playing: Aaj Sajeya');
+      }).catch(err => {
+        console.warn('Playback error:', err);
+      });
+    }
   };
+
+  // Attempt autoplay or resume user state upon first interaction
+  function tryAutoPlayMusic() {
+    const state = sessionStorage.getItem('weddingMusicPlaying');
+    // If user previously played or if first time entering invitation
+    if (state !== 'false') {
+      const audio = initWeddingAudio();
+      audio.play().then(() => {
+        updateMusicButtonUI();
+      }).catch(() => {
+        // Autoplay policy prevented; user can click anytime or first touch will trigger
+        const onFirstUserTouch = () => {
+          if (sessionStorage.getItem('weddingMusicPlaying') !== 'false') {
+            audio.play().catch(() => {});
+          }
+          document.removeEventListener('click', onFirstUserTouch);
+          document.removeEventListener('touchstart', onFirstUserTouch);
+        };
+        document.addEventListener('click', onFirstUserTouch, { once: true });
+        document.addEventListener('touchstart', onFirstUserTouch, { once: true });
+      });
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', tryAutoPlayMusic);
+  } else {
+    tryAutoPlayMusic();
+  }
 
   function getDeletedIds() {
     try {
