@@ -658,38 +658,37 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     pointer-events: none !important;
   }
 
-  /* 3. Floating Admin Login Trigger (Top-Right) & Music Button (Top-Left) */
-  #admin-floating-btn, #music-floating-btn {
+  /* 3. Floating Admin Login Trigger (Top-Right) */
+  #admin-floating-btn {
     position: fixed;
     top: 14px;
-    z-index: 99999;
-    background: linear-gradient(135deg, rgba(88, 3, 8, 0.92), rgba(45, 0, 4, 0.95));
+    right: 14px;
+    z-index: 999999 !important;
+    background: linear-gradient(135deg, rgba(88, 3, 8, 0.94), rgba(45, 0, 4, 0.96));
     color: #f2c06e;
-    border: 1px solid rgba(242, 192, 110, 0.45);
+    border: 1px solid rgba(242, 192, 110, 0.55);
     padding: 7px 14px;
     border-radius: 20px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(242, 192, 110, 0.2);
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(242, 192, 110, 0.35);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(242, 192, 110, 0.25);
     display: flex;
     align-items: center;
     gap: 6px;
     transition: all 0.25s ease;
     backdrop-filter: blur(8px);
     user-select: none;
+    -webkit-user-select: none;
+    box-sizing: border-box;
+    outline: none;
   }
 
-  #admin-floating-btn {
-    right: 14px;
-  }
-
-  #music-floating-btn {
-    left: 14px;
-  }
-
-  #admin-floating-btn:hover, #music-floating-btn:hover {
+  #admin-floating-btn:hover {
     transform: translateY(-2px);
     background: linear-gradient(135deg, rgba(115, 6, 12, 0.95), rgba(65, 0, 6, 0.98));
     border-color: #f2c06e;
@@ -1286,13 +1285,6 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
   /* Small & Standard Mobile Phones (<= 480px) */
   @media (max-width: 480px) {
-    #music-floating-btn {
-      top: 10px !important;
-      left: 10px !important;
-      padding: 6px 11px !important;
-      font-size: 0.72rem !important;
-      gap: 4px !important;
-    }
     #admin-floating-btn {
       top: 10px !important;
       right: 10px !important;
@@ -1365,7 +1357,7 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
   /* Extra Small Phones (<= 360px) */
   @media (max-width: 360px) {
-    #music-floating-btn, #admin-floating-btn {
+    #admin-floating-btn {
       padding: 5px 9px !important;
       font-size: 0.68rem !important;
     }
@@ -1380,12 +1372,6 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
   /* Tablets & Desktops (>= 768px) */
   @media (min-width: 768px) {
-    #music-floating-btn {
-      top: 20px;
-      left: 24px;
-      padding: 9px 18px;
-      font-size: 0.85rem;
-    }
     #admin-floating-btn {
       top: 20px;
       right: 24px;
@@ -1402,10 +1388,12 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
   }
 </style>
 
-<!-- Floating Music Button -->
-<div id="music-floating-btn" onclick="toggleWeddingMusic()" title="Play/Pause Wedding Music">
-  <span id="music-btn-icon">🔇</span> <span id="music-btn-label">Music Off</span>
-</div>
+<!-- Background Wedding Music Player (Aaj Sajeya - 0:22 Start) -->
+<audio id="wedding-audio" preload="auto" loop playsinline webkit-playsinline style="display:none;">
+  <source src="/audio/aaj_sajeya.mp3" type="audio/mpeg">
+  <source src="https://aac.saavncdn.com/055/e2e03a537936e0bad158bc2a2159ec42_sar_160.mp4" type="audio/mp4">
+  <source src="https://aac.saavncdn.com/055/e2e03a537936e0bad158bc2a2159ec42_96.mp4" type="audio/mp4">
+</audio>
 
 <!-- Floating Admin Trigger Button -->
 <div id="admin-floating-btn" onclick="openAdminModal()">
@@ -1630,87 +1618,190 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     });
   };
 
-  // ================= WEDDING MUSIC: "Aaj Sajeya" =================
+  // ================= WEDDING MUSIC: "Aaj Sajeya" (0:22 Start) =================
   let weddingAudio = null;
   let isMusicPlaying = false;
+  let synthFallbackActive = false;
+  let synthOscs = [];
+  let synthCtx = null;
+  const CDN_SONG_URL = 'https://aac.saavncdn.com/055/e2e03a537936e0bad158bc2a2159ec42_sar_160.mp4';
+  const START_OFFSET_SECONDS = 22;
 
   function initWeddingAudio() {
+    if (weddingAudio) return weddingAudio;
+    weddingAudio = document.getElementById('wedding-audio');
     if (!weddingAudio) {
-      weddingAudio = new Audio('/audio/aaj_sajeya.mp3');
+      weddingAudio = document.createElement('audio');
+      weddingAudio.id = 'wedding-audio';
       weddingAudio.loop = true;
       weddingAudio.preload = 'auto';
+      weddingAudio.setAttribute('playsinline', '');
+      weddingAudio.setAttribute('webkit-playsinline', '');
+      weddingAudio.style.display = 'none';
 
-      weddingAudio.addEventListener('play', () => {
-        isMusicPlaying = true;
-        sessionStorage.setItem('weddingMusicPlaying', 'true');
-        updateMusicButtonUI();
-      });
+      const s1 = document.createElement('source');
+      s1.src = '/audio/aaj_sajeya.mp3';
+      s1.type = 'audio/mpeg';
+      weddingAudio.appendChild(s1);
 
-      weddingAudio.addEventListener('pause', () => {
+      const s2 = document.createElement('source');
+      s2.src = CDN_SONG_URL;
+      s2.type = 'audio/mp4';
+      weddingAudio.appendChild(s2);
+
+      document.body.appendChild(weddingAudio);
+    }
+
+    weddingAudio.loop = true;
+
+    // When metadata loads or time updates on CDN full stream, jump to 0:22
+    weddingAudio.addEventListener('loadedmetadata', () => {
+      const src = weddingAudio.currentSrc || weddingAudio.src || '';
+      if (src.includes('saavncdn.com') && weddingAudio.currentTime < START_OFFSET_SECONDS) {
+        try { weddingAudio.currentTime = START_OFFSET_SECONDS; } catch (e) {}
+      }
+    });
+
+    weddingAudio.addEventListener('play', () => {
+      isMusicPlaying = true;
+      sessionStorage.setItem('weddingMusicPlaying', 'true');
+    });
+
+    weddingAudio.addEventListener('pause', () => {
+      if (!synthFallbackActive) {
         isMusicPlaying = false;
         sessionStorage.setItem('weddingMusicPlaying', 'false');
-        updateMusicButtonUI();
-      });
+      }
+    });
 
-      weddingAudio.addEventListener('error', (e) => {
-        console.warn('[Wedding Audio error]', e);
-      });
-    }
+    weddingAudio.addEventListener('error', (e) => {
+      console.warn('[Wedding Audio error - switching to CDN/synth fallback]', e);
+      const src = weddingAudio.currentSrc || weddingAudio.src || '';
+      if (!src.includes('saavncdn.com')) {
+        weddingAudio.src = CDN_SONG_URL;
+        weddingAudio.load();
+        try { weddingAudio.currentTime = START_OFFSET_SECONDS; } catch (err) {}
+        if (isMusicPlaying) {
+          weddingAudio.play().catch(() => startSynthFallback());
+        }
+      } else {
+        startSynthFallback();
+      }
+    });
+
     return weddingAudio;
   }
 
-  function updateMusicButtonUI() {
-    const icon = document.getElementById('music-btn-icon');
-    const label = document.getElementById('music-btn-label');
-    const btn = document.getElementById('music-floating-btn');
-    if (icon) icon.textContent = isMusicPlaying ? '🎵' : '🔇';
-    if (label) label.textContent = isMusicPlaying ? 'Aaj Sajeya' : 'Music Off';
-    if (btn) {
-      if (isMusicPlaying) {
-        btn.classList.add('music-playing');
-        btn.setAttribute('title', 'Playing: Aaj Sajeya (Click to pause)');
-      } else {
-        btn.classList.remove('music-playing');
-        btn.setAttribute('title', 'Play: Aaj Sajeya (Click to play)');
-      }
+  function startSynthFallback() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!synthCtx) synthCtx = new AudioCtx();
+      if (synthCtx.state === 'suspended') synthCtx.resume();
+      if (synthOscs.length > 0) return;
+
+      const notes = [293.66, 329.63, 369.99, 440.00, 493.88, 587.33];
+      const masterGain = synthCtx.createGain();
+      masterGain.gain.setValueAtTime(0.08, synthCtx.currentTime);
+      masterGain.connect(synthCtx.destination);
+
+      const osc = synthCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(notes[0], synthCtx.currentTime);
+      osc.connect(masterGain);
+      osc.start();
+      synthOscs.push(osc);
+
+      let step = 0;
+      const interval = setInterval(() => {
+        if (!synthFallbackActive || !synthCtx) {
+          clearInterval(interval);
+          return;
+        }
+        step = (step + 1) % notes.length;
+        osc.frequency.setTargetAtTime(notes[step], synthCtx.currentTime, 0.2);
+      }, 750);
+
+      synthFallbackActive = true;
+      isMusicPlaying = true;
+    } catch (e) {
+      console.warn('Synth error:', e);
     }
+  }
+
+  function stopSynthFallback() {
+    synthFallbackActive = false;
+    synthOscs.forEach(o => { try { o.stop(); o.disconnect(); } catch (e) {} });
+    synthOscs = [];
+  }
+
+  // Unconditional Wedding Song Autoplay & Multi-Event Mobile Unlock
+  function tryAutoPlayMusic() {
+    const audio = initWeddingAudio();
+    if (!audio) return;
+
+    let hasStarted = false;
+
+    const playAudio = function() {
+      if (hasStarted && !audio.paused) return;
+      const p = audio.play();
+      if (p !== undefined) {
+        p.then(() => {
+          hasStarted = true;
+          isMusicPlaying = true;
+          cleanupListeners();
+        }).catch(err => {
+          // If local audio stream failed, fallback immediately to high-speed CDN
+          const src = audio.currentSrc || audio.src || '';
+          if (!src.includes('saavncdn.com')) {
+            audio.src = CDN_SONG_URL;
+            audio.load();
+            try { audio.currentTime = START_OFFSET_SECONDS; } catch (e) {}
+            audio.play().then(() => {
+              hasStarted = true;
+              isMusicPlaying = true;
+              cleanupListeners();
+            }).catch(() => {
+              startSynthFallback();
+            });
+          } else {
+            startSynthFallback();
+          }
+        });
+      }
+    };
+
+    const cleanupListeners = function() {
+      const events = ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown', 'scroll'];
+      events.forEach(evt => {
+        try {
+          document.removeEventListener(evt, playAudio, true);
+          window.removeEventListener(evt, playAudio, true);
+        } catch (e) {}
+      });
+    };
+
+    // 1. Immediate Autoplay Attempt (works on desktop / allowed contexts)
+    playAudio();
+
+    // 2. Global First-Interaction Listener (instantly unlocks unmuted audio on iOS / Android touch)
+    const events = ['click', 'touchstart', 'touchend', 'pointerdown', 'keydown', 'scroll'];
+    events.forEach(evt => {
+      document.addEventListener(evt, playAudio, { capture: true, once: true, passive: true });
+      window.addEventListener(evt, playAudio, { capture: true, once: true, passive: true });
+    });
   }
 
   window.toggleWeddingMusic = function() {
     const audio = initWeddingAudio();
-    if (isMusicPlaying) {
-      audio.pause();
-    } else {
-      audio.play().then(() => {
-        window.showRoyalToast('🎵 Playing: Aaj Sajeya');
-      }).catch(err => {
-        console.warn('Playback error:', err);
-      });
+    if (audio) {
+      if (audio.paused) {
+        audio.play().catch(() => {});
+      } else {
+        audio.pause();
+      }
     }
   };
-
-  // Attempt autoplay or resume user state upon first interaction
-  function tryAutoPlayMusic() {
-    const state = sessionStorage.getItem('weddingMusicPlaying');
-    // If user previously played or if first time entering invitation
-    if (state !== 'false') {
-      const audio = initWeddingAudio();
-      audio.play().then(() => {
-        updateMusicButtonUI();
-      }).catch(() => {
-        // Autoplay policy prevented; user can click anytime or first touch will trigger
-        const onFirstUserTouch = () => {
-          if (sessionStorage.getItem('weddingMusicPlaying') !== 'false') {
-            audio.play().catch(() => {});
-          }
-          document.removeEventListener('click', onFirstUserTouch);
-          document.removeEventListener('touchstart', onFirstUserTouch);
-        };
-        document.addEventListener('click', onFirstUserTouch, { once: true });
-        document.addEventListener('touchstart', onFirstUserTouch, { once: true });
-      });
-    }
-  }
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', tryAutoPlayMusic);

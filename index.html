@@ -4,19 +4,10 @@
 <!-- ================= CLIENT-SIDE MAP & BRANDING ENGINE INTERCEPTOR ================= -->
 <script id="bulletproof-map-interceptor">
 (function() {
-  // Redirect ?open=1 to /open immediately for static/serverless hosts
-  try {
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('open') === '1' && !window.location.pathname.endsWith('/open') && !window.location.pathname.endsWith('/open.html')) {
-      window.location.replace('/open');
-      return;
-    }
-  } catch (e) {}
-
   const EXACT_MAP_LINK = 'https://maps.app.goo.gl/775D5bTizAvwEypB9';
   const GOOGLE_EMBED_URL = 'https://maps.google.com/maps?q=Kalyan+Lawn,+Police+Chowki,+Raebareli+Rd,+opposite+South+City,+New+Defence+Colony,+Lucknow,+Uttar+Pradesh+226029&hl=en&z=16&output=embed';
 
-  // 1. Prototype Setter Interceptor (only replaces restricted v1/AIzaSy URLs)
+  // 1. Prototype Setter Interceptor - only intercepts restricted API-key embeds
   try {
     const originalSrcDesc = Object.getOwnPropertyDescriptor(HTMLIFrameElement.prototype, 'src');
     if (originalSrcDesc && originalSrcDesc.set) {
@@ -82,7 +73,7 @@
       }
     });
 
-    // Only enhance [data-landing-screenshot-id="invite-map"] if it does not already contain KALYAN LAWN
+    // Only inject into [data-landing-screenshot-id="invite-map"] if it doesn't already have KALYAN LAWN
     const mapSections = document.querySelectorAll('[data-landing-screenshot-id="invite-map"]');
     mapSections.forEach(sec => {
       if (!sec.querySelector('.venue-enhanced-details') && !sec.textContent.includes('KALYAN LAWN')) {
@@ -130,7 +121,13 @@
 <link rel="preload" href="/fonts/AlexBrush-Regular.ttf" as="font" crossorigin="anonymous" type="font/ttf"/>
 <link rel="preload" href="/fonts/Lora-Regular.ttf" as="font" crossorigin="anonymous" type="font/ttf"/>
 <link rel="preload" href="/fonts/Pattaya-Regular.woff" as="font" type="font/woff" crossorigin="anonymous"/>
+<link rel="preload" as="image" href="/images/themes/mandap-darkred/goldenfloral-decoration.webp"/>
+<link rel="preload" as="image" href="/images/themes/mandap-darkred/arch-frame.webp"/>
 <link rel="preload" as="image" href="/images/themes/mandap-darkred/column-decoration.webp"/>
+<link rel="preload" as="image" href="/images/themes/mandap-darkred/kolam-decoration.webp"/>
+<link rel="preload" as="image" href="/images/themes/mandap-darkred/bell-decoration.webp"/>
+<link rel="preload" as="image" href="/images/themes/mandap-darkred/om-decoration.webp"/>
+<link rel="preload" as="image" href="/images/themes/mandap-darkred/line-decoration.webp"/>
 <link rel="stylesheet" href="/_next/static/css/870c3a38f21a0fbd.css" data-precedence="next"/>
 <link rel="stylesheet" href="/_next/static/css/08fc569d88870472.css" data-precedence="next"/>
 <meta name="theme-color" content="#580308"/>
@@ -152,8 +149,8 @@
 </head>
 <body class="font-sans">
 <div data-invitation-page="true" class="contents">
-  <div dir="ltr" lang="en" style="display:contents">
-    <div style="background:linear-gradient(to bottom right, rgba(242, 192, 110, 0.5), rgba(95, 0, 5, 0.96))" data-landing-screenshot-id="invite-envelope" class="jsx-353cb38c53e4a74a fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
+  <!-- ================= ENVELOPE COVER OVERLAY ================= -->
+  <div id="envelope-overlay" data-landing-screenshot-id="invite-envelope" style="background:linear-gradient(to bottom right, rgba(242, 192, 110, 0.5), rgba(95, 0, 5, 0.96)); transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.65s ease;" class="jsx-353cb38c53e4a74a fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
       <!-- Falling Petals -->
       <div style="z-index:1" class="jsx-353cb38c53e4a74a absolute inset-0 pointer-events-none overflow-hidden">
         <div style="left:47.55569343222305%;top:-30px;bottom:auto;color:#c9332e;font-size:10.103722695726901px;--sway:15.573664465919137px;animation:ambient-fall 22.978819163516164s ease-in-out -14.24874530789528s infinite" class="jsx-353cb38c53e4a74a absolute"><svg viewBox="0 0 24 24" fill="currentColor" width="1em" height="1em"><g><ellipse cx="12" cy="5" rx="2.2" ry="4.5"></ellipse><ellipse cx="12" cy="5" rx="2.2" ry="4.5" transform="rotate(60 12 12)"></ellipse><ellipse cx="12" cy="5" rx="2.2" ry="4.5" transform="rotate(120 12 12)"></ellipse><ellipse cx="12" cy="5" rx="2.2" ry="4.5" transform="rotate(180 12 12)"></ellipse><ellipse cx="12" cy="5" rx="2.2" ry="4.5" transform="rotate(240 12 12)"></ellipse><ellipse cx="12" cy="5" rx="2.2" ry="4.5" transform="rotate(300 12 12)"></ellipse></g><circle cx="12" cy="12" r="1.8" fill-opacity="0.45"></circle></svg></div>
@@ -206,6 +203,410 @@
           </div>
         </div>
       </div>
+  </div>
+  <!-- ================= END ENVELOPE COVER OVERLAY ================= -->
+
+  <div class="cursor-default" data-landing-screenshot-id="invite-renderer" data-video-invitation="true" dir="ltr" lang="en">
+    <div class="min-h-screen w-full bg-transparent">
+      <main class="min-h-screen w-full">
+        <style>
+          .md-card {
+            --st-w: min(100vw, 480px);
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+          }
+          @media (min-width: 640px) {
+            .md-card {
+              --st-w: min(92vw, 560px);
+              max-width: min(92vw, 560px);
+              margin: 24px auto;
+              border: 1px solid rgba(242, 192, 110, 0.32);
+              border-radius: 18px;
+              box-shadow: 0 20px 70px rgba(0, 0, 0, 0.75);
+            }
+          }
+          @media (min-width: 1024px) {
+            .md-card {
+              --st-w: 620px;
+              max-width: 620px;
+              margin: 32px auto;
+              border: 1px solid rgba(242, 192, 110, 0.38);
+              border-radius: 22px;
+              box-shadow: 0 25px 85px rgba(0, 0, 0, 0.82);
+            }
+          }
+        </style>
+        <div class="flex w-full justify-center overflow-x-clip bg-transparent overflow-clip scrollbar-none" data-testid="mandap-darkred-template">
+          <div data-showcase-root="" class="relative w-full max-w-[480px] mx-auto overflow-hidden md-card isolate" style="background-color:#6b0508;color:#ffdfaf">
+            <div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-20 mix-blend-overlay" style="background-image:radial-gradient(circle at 50% 25%, rgba(242,192,110,0.12) 0%, transparent 70%);opacity:0.5"></div>
+
+            <!-- Section 1: Hero Mandap Arch -->
+            <section class="relative isolate w-full" style="margin-top:calc(0.07710 * var(--st-w));height:calc(1.77324 * var(--st-w))">
+              <div aria-hidden="true" class="pointer-events-none absolute left-1/2 z-0 -translate-x-1/2" style="top:calc(-0.05215 * var(--st-w));width:111.791%;height:calc(1.82540 * var(--st-w))">
+                <img src="/images/themes/mandap-darkred/goldenfloral-decoration.webp" alt="" class="absolute left-[5.477%] top-[89.441%] h-auto w-[89.249%] max-w-none object-contain" loading="eager" decoding="async"/>
+                <img src="/images/themes/mandap-darkred/arch-frame.webp" alt="" class="absolute left-[1.217%] top-[7.205%] h-auto w-[97.769%] max-w-none object-contain" loading="eager" decoding="async"/>
+                <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" class="absolute left-[-8.114%] top-[19.503%] h-auto w-[59.229%] max-w-none object-contain" style="transform:scaleX(-1)" loading="eager" decoding="async"/>
+                <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" class="absolute left-[48.276%] top-[19.503%] h-auto w-[59.229%] max-w-none object-contain" loading="eager" decoding="async"/>
+                <img src="/images/themes/mandap-darkred/kolam-decoration.webp" alt="" class="absolute left-[39.959%] top-[72.298%] h-auto w-[19.878%] max-w-none object-contain" loading="eager" decoding="async"/>
+                <img src="/images/themes/mandap-darkred/bell-decoration.webp" alt="" class="absolute left-[2.231%] top-[-5.590%] h-auto w-[25.355%] max-w-none object-contain" style="transform:scaleX(-1)" loading="eager" decoding="async"/>
+                <img src="/images/themes/mandap-darkred/bell-decoration.webp" alt="" class="absolute left-[71.602%] top-[-5.590%] h-auto w-[25.355%] max-w-none object-contain" loading="eager" decoding="async"/>
+                <img src="/images/themes/mandap-darkred/om-decoration.webp" alt="" class="absolute left-[41.780%] top-[17.143%] h-auto w-[16.440%] max-w-none object-contain" loading="eager" decoding="async"/>
+              </div>
+              <div class="absolute left-1/2 z-10 flex -translate-x-1/2 flex-col items-center text-center" style="top:calc(0.67120 * var(--st-w));width:66%">
+                <p class="whitespace-pre-line uppercase tracking-[0.18em]" style="font-size:clamp(9px, calc(0.022 * var(--st-w)), 14px);font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif;color:#ffdfaf">!! Om Shree Ganeshay Namah !!</p>
+                <div class="flex w-full flex-col items-center leading-none" style="margin-top:calc(0.03628 * var(--st-w));font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">
+                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.076 * var(--st-w)), 46px);line-height:1.25;padding-top:0.1em">Dr.Shubhanil</span></div>
+                  <span class="my-[5px] md:my-2" style="font-family:&quot;Alex Brush&quot;, &quot;The Nautigal&quot;, ChungDoiIndic, cursive;color:#f2c06e;font-size:clamp(18px, calc(0.048 * var(--st-w)), 28px);line-height:1">&amp;</span>
+                  <div class="flex w-full justify-center"><span class="whitespace-nowrap" style="font-size:clamp(24px, calc(0.076 * var(--st-w)), 46px);line-height:1.25;padding-top:0.1em">Dr.Nidhi</span></div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 2: Parents, Couple & Ceremony Dates -->
+            <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
+              <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none absolute left-[-19.388%] z-[1] h-auto w-[48.299%] max-w-none object-contain" style="top:calc(0.34014 * var(--st-w));transform:scaleX(-1);will-change:transform" loading="lazy" decoding="async"/>
+              <img src="/images/themes/mandap-darkred/column-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none absolute left-[70.975%] z-[1] h-auto w-[48.299%] max-w-none object-contain" style="top:calc(0.34014 * var(--st-w));will-change:transform" loading="lazy" decoding="async"/>
+              <div class="relative z-10 flex w-full flex-col items-center" style="padding-inline:clamp(16px, 7.5%, 48px)">
+                <h2 class="uppercase font-bold text-center" style="font-size:clamp(18px, calc(0.042 * var(--st-w)), 26px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">Son of  &amp; Daughter of</span></h2>
+                <div class="grid w-full grid-cols-[1fr_auto_1fr] grid-rows-[repeat(4,auto)] justify-center gap-x-3 gap-y-[3px] md:gap-x-6" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;margin-top:calc(0.03175 * var(--st-w))">
+                  <div class="row-span-4 grid grid-rows-subgrid justify-items-center min-w-0 text-center">
+                    <span class="text-[12px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Anil kr</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Shobha Devi</span></span>
+                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Sikandarpur, Muzaffarpur, Bihar</span></div>
+                  </div>
+                  <img src="/images/themes/mandap-darkred/line-decoration.webp" alt="" aria-hidden="true" class="row-span-4 h-[51px] w-auto max-w-none self-center object-contain md:h-[68px]"/>
+                  <div class="row-span-4 grid grid-rows-subgrid justify-items-center min-w-0 text-center">
+                    <span class="text-[12px] md:text-[16px]" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Mr. &amp; Mrs.</span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Sandeep </span></span>
+                    <span class="font-semibold [overflow-wrap:anywhere]" style="font-size:clamp(12px, calc(0.028 * var(--st-w)), 16px);font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e"><span dir="auto">Vandana Devi</span></span>
+                    <div class="whitespace-pre-line [overflow-wrap:anywhere] text-[10px] md:text-[13px] mt-[4px] leading-snug flex flex-col" style="color:#ffdfaf;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif"><span dir="auto">Rakabganj,Lucknow, Uttar Pradesh </span></div>
+                  </div>
+                </div>
+                <div class="flex flex-col gap-[3px] text-center text-[16px] md:text-[20px] uppercase mx-auto md:max-w-[560px]" style="white-space:pre-line;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;margin-top:calc(0.04535 * var(--st-w))"><span dir="auto">WE JOYFULLY ANNOUNCE
+THE WEDDING Ceremony 
+</span></div>
+                <div data-showcase-keep="" class="w-full min-w-0 flex flex-col items-center" style="margin-top:calc(0.04082 * var(--st-w))">
+                  <h3 class="w-[80%] min-h-[80px] flex items-center justify-center leading-[54px] md:leading-[72px] whitespace-nowrap" style="font-size:clamp(26px, calc(0.072 * var(--st-w)), 42px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Shubhanil </h3>
+                  <div class="uppercase text-[10px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Groom</span></div>
+                  <div class="text-[35px] leading-none md:text-[47px]" style="color:#f2c06e;font-family:&quot;Clicker Script&quot;, &quot;Alex Brush&quot;, ChungDoiIndic, cursive">&amp;</div>
+                  <h3 class="w-[80%] min-h-[80px] flex items-center justify-center leading-[54px] md:leading-[72px] whitespace-nowrap" style="font-size:clamp(26px, calc(0.072 * var(--st-w)), 42px);font-family:&quot;Viaoda Libre&quot;, &quot;EB Garamond&quot;, ChungDoiIndic, cursive;color:#f2c06e">Dr.Nidhi</h3>
+                  <div class="uppercase text-[10px] md:text-[13px] tracking-[0.2em]" style="color:#ffdfaf;font-family:&quot;Cormorant Garamond&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span dir="auto">Bride</span></div>
+                </div>
+                <div class="flex w-full flex-col items-center" style="margin-top:calc(0.04535 * var(--st-w));gap:calc(0.04989 * var(--st-w))">
+                  <div class="relative flex flex-col items-center gap-[6px] text-center md:gap-2" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">
+                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[16px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]" style="font-size:clamp(14px, calc(0.034 * var(--st-w)), 20px)">TILK, HALDI, MARWA MATKOR CEREMONY AT - MUZAFFARPUR (HOME)</span></div>
+                    <div class="flex w-full max-w-[165px] md:max-w-[230px] items-center justify-between text-[12px] md:text-[16px] uppercase whitespace-nowrap min-w-max gap-x-3" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span>AT 10:00 AM</span><span><span dir="auto">FRIDAY</span></span></div>
+                    <div class="flex items-center gap-[9px] md:gap-3" style="color:#f2c06e">
+                      <span class="text-[57px] md:text-[76px] leading-none" style="font-size:clamp(46px, calc(0.12 * var(--st-w)), 72px);color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">20</span>
+                      <div class="h-[46px] w-[1px] md:h-[62px]" style="background-color:#f2c06e;opacity:0.8"></div>
+                      <div class="flex flex-col items-start justify-center gap-1 text-left">
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="relative flex flex-col items-center gap-[6px] text-center md:gap-2" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">
+                    <div style="color:#f2c06e;max-width:min(84vw, calc(0.62 * var(--st-w)))"><span dir="auto" class="whitespace-pre-line text-[16px] md:text-[20px] uppercase leading-[1.5] flex flex-col items-center text-center tracking-[0.03em]" style="font-size:clamp(14px, calc(0.034 * var(--st-w)), 20px)">WEDDING CEREMONY AT -
+KALYAN LAWN
+Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></div>
+                    <div class="flex w-full max-w-[165px] md:max-w-[230px] items-center justify-between text-[12px] md:text-[16px] uppercase whitespace-nowrap min-w-max gap-x-3" style="color:#ffdfaf;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span>AT 6:00 PM</span><span><span dir="auto">WEDNESDAY</span></span></div>
+                    <div class="flex items-center gap-[9px] md:gap-3" style="color:#f2c06e">
+                      <span class="text-[57px] md:text-[76px] leading-none" style="font-size:clamp(46px, calc(0.12 * var(--st-w)), 72px);color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">25</span>
+                      <div class="h-[46px] w-[1px] md:h-[62px]" style="background-color:#f2c06e;opacity:0.8"></div>
+                      <div class="flex flex-col items-start justify-center gap-1 text-left">
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
+                        <span class="text-[17px] md:text-[23px] uppercase" style="font-size:clamp(15px, calc(0.036 * var(--st-w)), 22px);color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div aria-hidden="true" style="height:calc(0.09070 * var(--st-w))"></div>
+              </div>
+            </section>
+
+            <!-- Section 3: 3D Photo Gallery -->
+            <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w));padding-inline:8.503%" id="photo-gallery-section">
+              <div class="relative z-10 flex w-full flex-col items-center">
+                <h2 class="uppercase font-bold text-[20px] md:text-[26px] text-center mb-4" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">Photo Gallery</span></h2>
+                <div class="w-full max-w-[414px] md:max-w-[640px]">
+                  <div class="relative h-[340px] md:h-[520px] touch-pan-y" id="gallery-carousel-stage">
+                    <button type="button" id="gallery-prev-btn" aria-label="Previous photo" class="flex absolute left-0 top-1/2 -translate-y-1/2 z-[200] w-8 h-8 items-center justify-center rounded-full bg-base-200/60 hover:bg-base-200 transition-colors cursor-pointer">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path></svg>
+                    </button>
+                    <button type="button" id="gallery-next-btn" aria-label="Next photo" class="flex absolute right-0 top-1/2 -translate-y-1/2 z-[200] w-8 h-8 items-center justify-center rounded-full bg-base-200/60 hover:bg-base-200 transition-colors cursor-pointer">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path></svg>
+                    </button>
+                    <div class="relative w-full h-full flex items-center justify-center" style="perspective:1000px" id="gallery-cards-container">
+                      <div data-gallery-idx="0" class="gallery-card-item absolute h-[92%] rounded-2xl overflow-hidden shadow-xl cursor-pointer transition-all ease-in-out ring-2 ring-white/30" style="aspect-ratio:0.6666666666666666;transition-duration:700ms;transform:translateX(0%) translateZ(0px) rotateY(0deg) scale(1);opacity:1;z-index:100">
+                        <img src="https://cdn.chungdoi.com/uploads/9481b212-b7fc-4352-90bc-a73718a55d9c.jpg" alt="Wedding photo 1" class="h-full w-full object-cover" style="object-position:50% 50.07173601147776%"/>
+                      </div>
+                      <div data-gallery-idx="1" class="gallery-card-item absolute h-[92%] rounded-2xl overflow-hidden shadow-xl cursor-pointer transition-all ease-in-out" style="aspect-ratio:0.6666666666666666;transition-duration:700ms;transform:translateX(60%) translateZ(-150px) rotateY(45deg) scale(0.85);opacity:0.75;z-index:99">
+                        <img src="https://cdn.chungdoi.com/uploads/3bb461dc-8e65-4dae-bbdd-5c256ee26d4a.jpg" alt="Wedding photo 2" class="h-full w-full object-cover" style="object-position:50% 71.60686427457098%"/>
+                      </div>
+                      <div data-gallery-idx="2" class="gallery-card-item absolute h-[92%] rounded-2xl overflow-hidden shadow-xl cursor-pointer transition-all ease-in-out" style="aspect-ratio:0.6666666666666666;transition-duration:700ms;transform:translateX(-60%) translateZ(-150px) rotateY(-45deg) scale(0.85);opacity:0.75;z-index:99">
+                        <img src="https://cdn.chungdoi.com/uploads/00ac0131-dbac-4dff-9ad6-2b012e9dff2f.jpg" alt="Wedding photo 3" class="h-full w-full object-cover" style="object-position:50% 29.289303661162958%"/>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="flex justify-center gap-1.5 mt-3" id="gallery-dots-container">
+                    <button type="button" data-dot-idx="0" aria-label="Go to photo 1" class="gallery-dot rounded-full transition-all duration-300 w-6 h-2 bg-current opacity-70 cursor-pointer"></button>
+                    <button type="button" data-dot-idx="1" aria-label="Go to photo 2" class="gallery-dot rounded-full transition-all duration-300 w-2 h-2 bg-current opacity-25 hover:opacity-40 cursor-pointer"></button>
+                    <button type="button" data-dot-idx="2" aria-label="Go to photo 3" class="gallery-dot rounded-full transition-all duration-300 w-2 h-2 bg-current opacity-25 hover:opacity-40 cursor-pointer"></button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- Section 4: Wedding Date, Countdown & Calendar -->
+            <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
+              <div aria-hidden="true" class="pointer-events-none relative z-[1]" style="padding-top:calc(0.04308 * var(--st-w));padding-bottom:calc(0.04762 * var(--st-w))">
+                <img src="/images/themes/mandap-darkred/golden-frame-decoration.webp" alt="" class="mx-auto block h-auto max-w-none object-contain" style="width:calc(0.56236 * var(--st-w))" loading="lazy" decoding="async"/>
+              </div>
+              <img src="/images/themes/mandap-darkred/flower-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none absolute left-[-7.710%] z-[1] h-auto w-[39.909%] max-w-none object-contain" style="top:calc(0.38776 * var(--st-w));transform:scaleX(-1);will-change:transform" loading="lazy" decoding="async"/>
+              <img src="/images/themes/mandap-darkred/flower-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none absolute left-[69.161%] z-[1] h-auto w-[39.909%] max-w-none object-contain" style="top:calc(0.38776 * var(--st-w));will-change:transform" loading="lazy" decoding="async"/>
+              <div class="relative z-10 flex w-full flex-col items-center" style="padding-inline:8.503%">
+                <h2 class="uppercase font-bold text-[20px] md:text-[26px] text-center" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">Wedding </span></h2>
+                <div class="flex w-full flex-col items-center" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#ffdfaf;margin-top:calc(0.06349 * var(--st-w))" data-landing-screenshot-id="invite-reception">
+                  <h3 class="text-[16px] md:text-[20px] uppercase flex flex-col items-center text-center" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#f2c06e;font-weight:600"><span dir="auto">The celebration will take place at:</span></h3>
+                  <div class="flex w-full max-w-[165px] md:max-w-[230px] items-center justify-between text-[15px] md:text-[19px] uppercase whitespace-nowrap min-w-max gap-x-3" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif"><span>5:00 PM</span><span><span dir="auto">WEDNESDAY</span></span></div>
+                  <div class="flex items-center gap-6" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">
+                    <span class="text-[57px] md:text-[76px] leading-none" style="color:#f2c06e;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">25</span>
+                    <div class="h-[46px] w-[1px] md:h-[62px]" style="background-color:#f2c06e;opacity:0.8"></div>
+                    <div class="flex flex-col items-start justify-center gap-1 text-left">
+                      <span class="text-[17px] md:text-[23px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">NOVEMBER</span></span>
+                      <span class="text-[17px] md:text-[23px] uppercase" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">2026</span>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-center flex-col mt-4">
+                    <h2 class="text-[15px] md:text-[19px] uppercase flex flex-col items-center" style="font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif;color:#ffdfaf"><span dir="auto">Countdown</span></h2>
+                    <div id="live-wedding-countdown" class="text-center mt-2 text-sm md:text-lg" style="color:#ffdfaf;font-family:&quot;Baskerville&quot;, &quot;Libre Baskerville&quot;, &quot;Times New Roman&quot;, ChungDoiIndic, serif">
+                      <p>Calculating...</p>
+                    </div>
+                  </div>
+                  <!-- Royal Framed Wedding Calendar -->
+                  <div class="royal-calendar-wrapper">
+                    <img src="/images/themes/mandap-darkred/calendar-frame.webp" aria-hidden="true" alt="" class="royal-calendar-frame-img"/>
+                    <div class="royal-calendar-inner" dir="ltr" data-showcase-keep="">
+                      <div class="royal-cal-header">
+                        <span class="royal-cal-title">November 2026</span>
+                        <span class="royal-cal-subtitle">Auspicious Wedding Month</span>
+                      </div>
+                      <div class="grid grid-cols-7 royal-cal-weekdays">
+                        <div class="royal-cal-wd">Mo</div>
+                        <div class="royal-cal-wd">Tu</div>
+                        <div class="royal-cal-wd">We</div>
+                        <div class="royal-cal-wd">Th</div>
+                        <div class="royal-cal-wd">Fr</div>
+                        <div class="royal-cal-wd">Sa</div>
+                        <div class="royal-cal-wd">Su</div>
+                      </div>
+                      <div class="grid grid-cols-7 royal-cal-grid">
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"></div>
+                        <div class="royal-cal-cell"><span>1</span></div>
+                        <div class="royal-cal-cell"><span>2</span></div>
+                        <div class="royal-cal-cell"><span>3</span></div>
+                        <div class="royal-cal-cell"><span>4</span></div>
+                        <div class="royal-cal-cell"><span>5</span></div>
+                        <div class="royal-cal-cell"><span>6</span></div>
+                        <div class="royal-cal-cell"><span>7</span></div>
+                        <div class="royal-cal-cell"><span>8</span></div>
+                        <div class="royal-cal-cell"><span>9</span></div>
+                        <div class="royal-cal-cell"><span>10</span></div>
+                        <div class="royal-cal-cell"><span>11</span></div>
+                        <div class="royal-cal-cell"><span>12</span></div>
+                        <div class="royal-cal-cell"><span>13</span></div>
+                        <div class="royal-cal-cell"><span>14</span></div>
+                        <div class="royal-cal-cell"><span>15</span></div>
+                        <div class="royal-cal-cell"><span>16</span></div>
+                        <div class="royal-cal-cell"><span>17</span></div>
+                        <div class="royal-cal-cell"><span>18</span></div>
+                        <div class="royal-cal-cell"><span>19</span></div>
+                        <div class="royal-cal-cell">
+                          <button type="button" class="royal-cal-haldi-btn" onclick="showRoyalToast('✨ Friday, Nov 20, 2026 (10:00 AM) — Tilk, Haldi & Marwa Matkor Ceremony at Muzaffarpur')" title="Tilak, Haldi & Marwa Matkor Ceremony">
+                            <span>20</span>
+                          </button>
+                        </div>
+                        <div class="royal-cal-cell"><span>21</span></div>
+                        <div class="royal-cal-cell"><span>22</span></div>
+                        <div class="royal-cal-cell"><span>23</span></div>
+                        <div class="royal-cal-cell"><span>24</span></div>
+                        <div class="royal-cal-cell">
+                          <button type="button" class="royal-cal-wedding-btn" onclick="showRoyalToast('💍 Wednesday, Nov 25, 2026 (5:00 PM) — Wedding Ceremony at Kalyan Lawn, Lucknow')" title="Wedding Ceremony at Kalyan Lawn, Lucknow">
+                            <img src="/images/themes/mandap-darkred/heart.svg" alt="" aria-hidden="true" class="royal-cal-heart-img"/>
+                            <span class="royal-cal-wedding-num">25</span>
+                          </button>
+                        </div>
+                        <div class="royal-cal-cell"><span>26</span></div>
+                        <div class="royal-cal-cell"><span>27</span></div>
+                        <div class="royal-cal-cell"><span>28</span></div>
+                        <div class="royal-cal-cell"><span>29</span></div>
+                        <div class="royal-cal-cell"><span>30</span></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Interactive Ceremony Date Legend (Below Frame) -->
+                  <div class="royal-cal-legend">
+                    <button type="button" class="royal-cal-legend-item" onclick="showRoyalToast('✨ Friday, Nov 20, 2026 (10:00 AM) — Tilk, Haldi & Marwa Matkor Ceremony at Muzaffarpur')">
+                      <span class="royal-cal-dot-haldi"></span>
+                      <span>20 Nov: Tilak &amp; Haldi</span>
+                    </button>
+                    <button type="button" class="royal-cal-legend-item" onclick="showRoyalToast('💍 Wednesday, Nov 25, 2026 (5:00 PM) — Wedding Ceremony at Kalyan Lawn, Lucknow')">
+                      <span class="royal-cal-dot-wedding">❤️</span>
+                      <span>25 Nov: Wedding Day</span>
+                    </button>
+                  </div>
+
+                  <a href="https://www.google.com/calendar/render?action=TEMPLATE&amp;text=Dr.Shubhanil%20%26%20Dr.Nidhi%27s%20Wedding%20Celebration&amp;dates=20261125T113000Z/20261125T173000Z&amp;ctz=Asia/Calcutta&amp;details=Join%20us%20to%20celebrate%20the%20marriage%20of%20Dr.Shubhanil%20%26%20Dr.Nidhi%20at%20Kalyan%20Lawn%2C%20Lucknow%20-%20https%3A%2F%2Fmaps.app.goo.gl%2F775D5bTizAvwEypB9&amp;location=Kalyan%20Lawn%2C%20Police%20Chowki%2C%20Raebareli%20Rd%2C%20opposite%20South%20City%2C%20New%20Defence%20Colony%2C%20Lucknow%2C%20Uttar%20Pradesh%20226029" target="_blank" rel="noopener noreferrer" class="royal-add-calendar-btn" data-showcase-join-prev="">
+                    <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                      <line x1="16" y1="2" x2="16" y2="6"></line>
+                      <line x1="8" y1="2" x2="8" y2="6"></line>
+                      <line x1="3" y1="10" x2="21" y2="10"></line>
+                    </svg>
+                    <span dir="auto">Add to Google Calendar</span>
+                  </a>
+                </div>
+                <img src="/images/themes/mandap-darkred/goldenline-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none mx-auto block h-auto max-w-none object-contain" style="width:calc(0.65986 * var(--st-w));margin-top:calc(0.04082 * var(--st-w))" loading="lazy" decoding="async"/>
+              </div>
+            </section>
+
+            <!-- Section 5: Confirm Attendance (RSVP) Button -->
+            <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w));padding-inline:8.503%">
+              <div class="relative z-10 flex w-full flex-col items-center justify-center" data-landing-screenshot-id="invite-rsvp">
+                <button type="button" id="confirm-attendance-btn" onclick="openGuestRsvpModal()" class="inline-flex items-center justify-center rounded-full px-7 py-[8px] text-[13px] font-semibold uppercase tracking-[0.04em] transition-transform hover:scale-[1.03] md:text-[15px] cursor-pointer shadow-lg" style="background-color:#f2c06e;color:#764c4d;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif">
+                  <span class="relative z-10 flex min-h-0 items-center justify-center gap-2"><span dir="auto">CONFIRM ATTENDANCE</span></span>
+                </button>
+              </div>
+            </section>
+
+            <!-- Section 6: Wedding Venue & Location Map -->
+            <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
+              <div class="flex w-full flex-col items-center">
+                <section class="relative flex w-full flex-col items-center gap-3 px-4 md:gap-4 md:px-8" data-landing-screenshot-id="invite-map">
+                  <div class="relative text-center w-full" style="max-width: 580px; margin: 0 auto;">
+                    <h3 class="uppercase font-bold text-[20px] md:text-[26px] text-center" style="color:#f2c06e;font-family:'Times New Roman', Times, serif;letter-spacing:0.04em;margin-bottom:8px;">
+                      Wedding Venue &amp; Location
+                    </h3>
+                    <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block;">
+                      <div style="font-family:'Times New Roman', Times, serif; font-size:clamp(1.2rem, 4vw, 1.45rem); color:#ffd98a; font-weight:700; margin-bottom:6px; letter-spacing:0.04em;">
+                        📍 KALYAN LAWN
+                      </div>
+                    </a>
+                    <div style="color:#ffdfaf; font-size:clamp(0.84rem, 2.8vw, 0.96rem); line-height:1.55; margin-bottom:16px; padding:0 4px;">
+                      Police Chowki, Raebareli Rd, opposite South City, New Defence Colony,<br class="hidden sm:inline">
+                      Lucknow, Uttar Pradesh 226029
+                    </div>
+
+                    <!-- Interactive Google Maps Embed for Kalyan Lawn -->
+                    <div class="venue-map-container" style="position:relative; width:100%; height:clamp(240px, 52vw, 340px); border-radius:14px; overflow:hidden; border:2px solid #f2c06e; box-shadow:0 8px 25px rgba(0,0,0,0.6); margin-bottom:16px; background:#3d0205;">
+                      <iframe 
+                        width="100%" 
+                        height="100%" 
+                        style="border:0; display:block;" 
+                        loading="lazy" 
+                        allowfullscreen 
+                        referrerpolicy="no-referrer-when-downgrade"
+                        title="Kalyan Lawn Wedding Venue Map"
+                        src="https://maps.google.com/maps?q=Kalyan+Lawn,+Police+Chowki,+Raebareli+Rd,+opposite+South+City,+New+Defence+Colony,+Lucknow,+Uttar+Pradesh+226029&amp;hl=en&amp;z=16&amp;output=embed">
+                      </iframe>
+                    </div>
+
+                    <!-- Direct Exact Google Maps Link Buttons -->
+                    <div class="venue-map-actions" style="display:flex; gap:10px; justify-content:center; flex-wrap:wrap; width:100%;">
+                      <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" 
+                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm md:text-base font-bold transition-transform hover:scale-105" 
+                         style="background:linear-gradient(135deg, #ffd98a, #cca04a); color:#4a0206; box-shadow:0 4px 15px rgba(242,192,110,0.4); text-decoration:none;">
+                        <svg class="h-5 w-5 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                        <span>Open in Google Maps</span>
+                      </a>
+                      <a href="https://maps.app.goo.gl/775D5bTizAvwEypB9" target="_blank" rel="noopener noreferrer" 
+                         class="venue-map-btn inline-flex items-center justify-center gap-2 rounded-full px-6 py-2.5 text-sm md:text-base font-semibold transition-transform hover:scale-105" 
+                         style="background:rgba(242,192,110,0.2); border:1px solid #f2c06e; color:#ffdfaf; text-decoration:none;">
+                        <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+                        </svg>
+                        <span>Get Directions</span>
+                      </a>
+                    </div>
+                  </div>
+                </section>
+                <img src="/images/themes/mandap-darkred/goldenline-decoration.webp" alt="" aria-hidden="true" class="pointer-events-none mx-auto block h-auto max-w-none object-contain" style="width:calc(0.65986 * var(--st-w));margin-top:calc(0.03175 * var(--st-w))" loading="lazy" decoding="async"/>
+              </div>
+            </section>
+
+            <!-- Section 7: Wedding Day Schedule -->
+            <section class="relative isolate w-full" style="margin-top:calc(0.05215 * var(--st-w))">
+              <div class="relative z-10 flex w-full flex-col items-center px-[14%] md:px-[17%]">
+                <h2 class="uppercase font-bold text-[20px] md:text-[26px] text-center mb-5" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;font-weight:700;letter-spacing:0.04em"><span dir="auto">WEDDING DAY SCHEDULE</span></h2>
+                <ol class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-4 md:gap-x-8 gap-y-8 md:gap-y-10" style="font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif;padding-top:12px;padding-bottom:12px">
+                  <li class="contents">
+                    <span class="pt-0.5 text-right text-[13px] md:text-[17px] tabular-nums tracking-wide leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif">
+                      <span class="relative inline-block">
+                        <span aria-hidden="true" class="absolute top-1/2 flex w-max items-center justify-center -translate-y-1/2 right-full" style="margin-right:clamp(8px, 2.8vw, 28px)">
+                          <span class="flex w-[52px] md:w-[95px] justify-center">
+                            <img src="/images/themes/mandap-darkred/wreath.webp" alt="" aria-hidden="true" class="w-[38px] md:w-[66px] h-auto max-w-none object-contain" loading="lazy" decoding="async"/>
+                          </span>
+                        </span>5:00 PM
+                      </span>
+                    </span>
+                    <span aria-hidden="true" class="relative flex items-center justify-center self-stretch">
+                      <span class="absolute left-1/2 -translate-x-1/2 w-px top-1/2 bottom-1/2" style="background-color:color-mix(in srgb, #f2c06e 40%, transparent)"></span>
+                      <span class="relative block h-2.5 w-2.5 rounded-full" style="background-color:#f2c06e;box-shadow:0 0 0 2px color-mix(in srgb, #f2c06e 13%, transparent)"></span>
+                    </span>
+                    <span class="text-[13px] md:text-[17px] leading-snug" style="color:#f2c06e;font-family:&quot;Times New Roman&quot;, Times, ChungDoiIndic, serif"><span dir="auto">Barat Will be headed towards Wedding Venue From Residence lko</span></span>
+                  </li>
+                </ol>
+              </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="relative w-full" style="padding-bottom: 36px;">
+              <div class="relative z-10 flex w-full flex-col items-center text-center px-4">
+                <span class="whitespace-pre-line flex flex-col items-center gap-1 text-[11px] md:text-[15px] mx-auto md:max-w-[560px]" style="color:#f2c06e;font-family:&quot;Roboto&quot;, &quot;Helvetica Neue&quot;, Arial, ChungDoiIndic, sans-serif;margin-top:calc(0.05215 * var(--st-w))"><span dir="auto">Your presence would be the greatest gift we could receive!</span></span>
+              </div>
+            </footer>
+
+            <!-- Lightbox Modal for Gallery -->
+            <dialog class="modal" id="gallery-lightbox-modal">
+              <div class="modal-box max-w-none w-auto h-auto bg-transparent shadow-none p-0 m-0 cursor-pointer">
+                <div class="flex flex-col items-center h-[100dvh] w-screen px-2 sm:px-4 pt-10 sm:pt-12 pb-4 sm:pb-6">
+                  <form class="absolute right-2 sm:right-4 top-2 sm:top-4 z-10" method="dialog">
+                    <button class="btn btn-sm btn-circle btn-ghost text-white text-xl sm:text-2xl hover:bg-transparent/20" aria-label="Close lightbox">✕</button>
+                  </form>
+                  <div id="lightbox-counter" class="absolute top-2 sm:top-4 left-2 sm:left-4 text-white text-sm sm:text-lg bg-black/40 px-2 sm:px-3 py-1 rounded-full shadow-md z-10">1 / 3</div>
+                  <div class="relative flex flex-1 w-full max-w-5xl items-center justify-center cursor-pointer px-8 sm:px-12 min-h-0 overscroll-none" style="touch-action:none">
+                    <button type="button" id="lightbox-prev-btn" class="btn btn-circle btn-ghost text-white text-2xl sm:text-4xl absolute left-0 sm:left-2 z-10 hover:bg-transparent/20 btn-sm sm:btn-md" aria-label="Previous image">‹</button>
+                    <img id="lightbox-main-img" src="https://cdn.chungdoi.com/uploads/9481b212-b7fc-4352-90bc-a73718a55d9c.jpg" alt="Wedding photo 1" class="max-h-full max-w-full rounded-xl sm:rounded-2xl object-contain shadow-2xl select-none cursor-default" style="transform:translate(0px, 0px) scale(1);transition:transform 0.2s ease-out" draggable="false"/>
+                    <button type="button" id="lightbox-next-btn" class="btn btn-circle btn-ghost text-white text-2xl sm:text-4xl absolute right-0 sm:right-2 z-10 hover:bg-transparent/20 btn-sm sm:btn-md" aria-label="Next image">›</button>
+                  </div>
+                  <div class="flex-shrink-0 flex gap-2 sm:gap-3 overflow-x-auto px-2 sm:px-4 py-2 sm:py-3 mt-3 sm:mt-4 bg-black/30 rounded-lg backdrop-blur-sm max-w-[90vw] sm:max-w-[80vw] cursor-default [&amp;::-webkit-scrollbar]:hidden" style="scrollbar-width:none;-ms-overflow-style:none" id="lightbox-thumbs-container">
+                    <button type="button" data-thumb-idx="0" class="lightbox-thumb flex-shrink-0 h-12 w-12 sm:h-16 sm:w-16 rounded-md sm:rounded-lg overflow-hidden transition-all duration-200 scale-105 shadow-lg cursor-pointer" style="outline:2px solid #f2c06e;outline-offset:2px" aria-label="View image 1">
+                      <img src="https://cdn.chungdoi.com/uploads/9481b212-b7fc-4352-90bc-a73718a55d9c.jpg" class="h-full w-full object-cover" alt="Thumbnail 1" draggable="false"/>
+                    </button>
+                    <button type="button" data-thumb-idx="1" class="lightbox-thumb flex-shrink-0 h-12 w-12 sm:h-16 sm:w-16 rounded-md sm:rounded-lg overflow-hidden transition-all duration-200 opacity-60 hover:opacity-100 cursor-pointer" aria-label="View image 2">
+                      <img src="https://cdn.chungdoi.com/uploads/3bb461dc-8e65-4dae-bbdd-5c256ee26d4a.jpg" class="h-full w-full object-cover" alt="Thumbnail 2" draggable="false"/>
+                    </button>
+                    <button type="button" data-thumb-idx="2" class="lightbox-thumb flex-shrink-0 h-12 w-12 sm:h-16 sm:w-16 rounded-md sm:rounded-lg overflow-hidden transition-all duration-200 opacity-60 hover:opacity-100 cursor-pointer" aria-label="View image 3">
+                      <img src="https://cdn.chungdoi.com/uploads/00ac0131-dbac-4dff-9ad6-2b012e9dff2f.jpg" class="h-full w-full object-cover" alt="Thumbnail 3" draggable="false"/>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <form class="modal-backdrop bg-black/85" method="dialog"><button>close</button></form>
+            </dialog>
+          </div>
+        </div>
+      </main>
     </div>
   </div>
 </div>
@@ -239,47 +640,6 @@
     font-weight: 400;
     font-style: normal;
     font-display: swap;
-  }
-
-  @keyframes ambient-fall {
-    0% {
-      transform: translate3d(0, -10vh, 0) rotate(0deg);
-      opacity: 0;
-    }
-    10% {
-      opacity: 0.85;
-    }
-    50% {
-      transform: translate3d(var(--sway, 15px), 50vh, 0) rotate(180deg);
-      opacity: 0.85;
-    }
-    90% {
-      opacity: 0.75;
-    }
-    100% {
-      transform: translate3d(calc(var(--sway, 15px) * -0.5), 110vh, 0) rotate(360deg);
-      opacity: 0;
-    }
-  }
-
-  @keyframes seal-pulse {
-    0%, 100% {
-      transform: translate(-50%, -50%) scale(1);
-      box-shadow: 0 4px 20px rgba(242, 192, 110, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3);
-    }
-    50% {
-      transform: translate(-50%, -50%) scale(1.07);
-      box-shadow: 0 6px 28px rgba(242, 192, 110, 0.8), inset 0 2px 6px rgba(255, 255, 255, 0.45);
-    }
-  }
-
-  @keyframes shine {
-    0% {
-      left: -40%;
-    }
-    60%, 100% {
-      left: 140%;
-    }
   }
 
   /* Eliminate extra portion & dead space below 'Your presence would be the greatest gift we could receive!' */
@@ -355,42 +715,77 @@
     pointer-events: none !important;
   }
 
-  /* 3. Floating Admin Login Trigger (Top-Right) & Music Button (Top-Left) */
-  #admin-floating-btn, #music-floating-btn {
+  /* 3. Floating Admin Login Trigger (Top-Right) */
+  #admin-floating-btn {
     position: fixed;
     top: 14px;
-    z-index: 99999;
-    background: linear-gradient(135deg, rgba(88, 3, 8, 0.92), rgba(45, 0, 4, 0.95));
+    right: 14px;
+    z-index: 999999 !important;
+    background: linear-gradient(135deg, rgba(88, 3, 8, 0.94), rgba(45, 0, 4, 0.96));
     color: #f2c06e;
-    border: 1px solid rgba(242, 192, 110, 0.45);
+    border: 1px solid rgba(242, 192, 110, 0.55);
     padding: 7px 14px;
     border-radius: 20px;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     font-size: 13px;
     font-weight: 600;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(242, 192, 110, 0.2);
+    cursor: pointer !important;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+    -webkit-tap-highlight-color: rgba(242, 192, 110, 0.35);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5), 0 0 10px rgba(242, 192, 110, 0.25);
     display: flex;
     align-items: center;
     gap: 6px;
     transition: all 0.25s ease;
     backdrop-filter: blur(8px);
     user-select: none;
+    -webkit-user-select: none;
+    box-sizing: border-box;
+    outline: none;
   }
 
-  #admin-floating-btn {
-    right: 14px;
-  }
-
-  #music-floating-btn {
-    left: 14px;
-  }
-
-  #admin-floating-btn:hover, #music-floating-btn:hover {
+  #admin-floating-btn:hover {
     transform: translateY(-2px);
     background: linear-gradient(135deg, rgba(115, 6, 12, 0.95), rgba(65, 0, 6, 0.98));
     border-color: #f2c06e;
     box-shadow: 0 6px 20px rgba(242, 192, 110, 0.4);
+  }
+
+  /* Countdown Boxes */
+  .countdown-grid {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    align-items: center;
+    margin-top: 6px;
+  }
+
+  .countdown-unit {
+    background: rgba(45, 0, 4, 0.65);
+    border: 1px solid rgba(242, 192, 110, 0.45);
+    border-radius: 10px;
+    min-width: 58px;
+    padding: 8px 10px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  }
+
+  .countdown-num {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #f2c06e;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .countdown-lbl {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #ffdfaf;
+    opacity: 0.85;
+    margin-top: 3px;
   }
 
   /* 4. Common Royal Modal Styles */
@@ -683,56 +1078,294 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  /* ================= ROYAL FRAMED CALENDAR UI & UX ================= */
+  .royal-calendar-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 355px;
+    margin: 24px auto 10px auto;
+    padding: 44px 36px 44px 36px;
+    box-sizing: border-box;
+  }
+
+  .royal-calendar-frame-img {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: fill;
+    pointer-events: none;
+    z-index: 2;
+    filter: drop-shadow(0 6px 16px rgba(0, 0, 0, 0.45));
+  }
+
+  .royal-calendar-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    background: radial-gradient(circle at 50% 50%, rgba(88, 3, 8, 0.55) 0%, transparent 90%);
+    border-radius: 6px;
+    padding: 4px 6px 4px 6px;
+    color: #f2c06e;
+  }
+
+  .royal-cal-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 6px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid rgba(242, 192, 110, 0.3);
+    font-family: "Times New Roman", Times, serif;
+  }
+
+  .royal-cal-title {
+    font-size: 1.08rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #ffd98a;
+    line-height: 1.2;
+  }
+
+  .royal-cal-subtitle {
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: rgba(255, 223, 175, 0.75);
+    margin-top: 2px;
+  }
+
+  .royal-cal-weekdays {
+    border-bottom: 1.5px solid rgba(242, 192, 110, 0.65);
+    padding-bottom: 4px;
+    margin-bottom: 4px;
+  }
+
+  .royal-cal-wd {
+    text-align: center;
+    padding: 3px 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: rgba(255, 223, 175, 0.78);
+  }
+
+  .royal-cal-grid {
+    row-gap: 1px;
+    padding: 2px 0;
+  }
+
+  .royal-cal-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 27px;
+    font-size: 0.8rem;
+    font-family: "Times New Roman", Times, serif;
+    color: #ffdfaf;
+  }
+
+  .royal-cal-haldi-btn {
+    position: relative;
+    width: 25px;
+    height: 25px;
+    border-radius: 9999px;
+    background: linear-gradient(135deg, rgba(242, 192, 110, 0.3), rgba(204, 160, 74, 0.15));
+    border: 1.5px dashed #ffd98a;
+    color: #ffd98a;
+    font-weight: 700;
+    font-size: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 10px rgba(242, 192, 110, 0.35);
+  }
+
+  .royal-cal-haldi-btn:hover {
+    transform: scale(1.14);
+    box-shadow: 0 0 14px rgba(242, 192, 110, 0.65);
+  }
+
+  .royal-cal-wedding-btn {
+    position: relative;
+    width: 29px;
+    height: 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    animation: cal-heart-pulse 2.2s ease-in-out infinite;
+  }
+
+  .royal-cal-heart-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: drop-shadow(0 2px 6px rgba(255, 80, 80, 0.6));
+  }
+
+  .royal-cal-wedding-num {
+    position: relative;
+    z-index: 2;
+    font-size: 0.74rem;
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+  }
+
+  @keyframes cal-heart-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.13); }
+  }
+
+  .royal-cal-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 4px auto 10px auto;
+  }
+
+  .royal-cal-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(242, 192, 110, 0.14);
+    border: 1px solid rgba(242, 192, 110, 0.38);
+    border-radius: 9999px;
+    padding: 4px 11px;
+    font-size: 0.72rem;
+    color: #ffdfaf;
+    cursor: pointer;
+    font-family: "Times New Roman", Times, serif;
+    transition: background 0.2s, transform 0.15s;
+  }
+
+  .royal-cal-legend-item:hover {
+    background: rgba(242, 192, 110, 0.26);
+    transform: translateY(-1px);
+  }
+
+  .royal-cal-dot-haldi {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #ffd98a;
+    border: 1px solid #fff;
+    display: inline-block;
+  }
+
+  .royal-cal-dot-wedding {
+    font-size: 0.72rem;
+    line-height: 1;
+  }
+
+  .royal-add-calendar-btn {
+    margin-top: 4px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 8px 20px;
+    border-radius: 9999px;
+    background: rgba(242, 192, 110, 0.16);
+    border: 1px solid #f2c06e;
+    color: #ffd98a;
+    font-family: "Times New Roman", Times, serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  }
+
+  .royal-add-calendar-btn:hover {
+    background: rgba(242, 192, 110, 0.28);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 18px rgba(242, 192, 110, 0.25);
+  }
+
+  @media (min-width: 640px) {
+    .royal-calendar-wrapper {
+      max-width: 410px;
+      padding: 50px 42px 50px 42px;
+    }
+    .royal-cal-title {
+      font-size: 1.22rem;
+    }
+    .royal-cal-cell {
+      height: 31px;
+      font-size: 0.86rem;
+    }
+    .royal-cal-haldi-btn {
+      width: 28px;
+      height: 28px;
+      font-size: 0.82rem;
+    }
+    .royal-cal-wedding-btn {
+      width: 32px;
+      height: 30px;
+    }
+    .royal-cal-legend-item {
+      font-size: 0.76rem;
+      padding: 5px 13px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .royal-calendar-wrapper {
+      max-width: 305px;
+      padding: 36px 28px 36px 28px;
+    }
+    .royal-cal-cell {
+      height: 24px;
+      font-size: 0.74rem;
+    }
+  }
+
   /* ================= MULTI-DEVICE RESPONSIVE DESIGN ================= */
   *, *::before, *::after {
     box-sizing: border-box;
   }
 
-  #envelope-card-wrapper {
-    width: 100%;
-    max-width: min(92vw, 370px);
-  }
-  @media (min-width: 640px) {
-    #envelope-card-wrapper {
-      max-width: 440px;
-    }
-  }
-  @media (min-width: 768px) {
-    #envelope-card-wrapper {
-      max-width: 520px;
-    }
-  }
-  @media (min-width: 1024px) {
-    #envelope-card-wrapper {
-      max-width: 560px;
-    }
-  }
-
-  /* Landscape phones & short viewports: allow smooth vertical scroll on envelope */
-  @media (max-height: 620px) {
-    [data-landing-screenshot-id="invite-envelope"] {
-      overflow-y: auto !important;
-      overflow-x: hidden !important;
-      align-items: flex-start !important;
-      padding: 48px 0 24px 0 !important;
-    }
-  }
-
   /* Small & Standard Mobile Phones (<= 480px) */
   @media (max-width: 480px) {
-    #music-floating-btn {
-      top: 10px !important;
-      left: 10px !important;
-      padding: 6px 11px !important;
-      font-size: 0.72rem !important;
-      gap: 4px !important;
-    }
     #admin-floating-btn {
       top: 10px !important;
       right: 10px !important;
       padding: 6px 11px !important;
       font-size: 0.72rem !important;
       gap: 4px !important;
+    }
+    .countdown-grid {
+      gap: 6px !important;
+    }
+    .countdown-unit {
+      min-width: 54px !important;
+      padding: 6px 8px !important;
+    }
+    .countdown-num {
+      font-size: 1.15rem !important;
+    }
+    .venue-map-actions {
+      flex-direction: column !important;
+      align-items: stretch !important;
+    }
+    .venue-map-btn {
+      width: 100% !important;
+      justify-content: center !important;
     }
     .wedding-modal-backdrop {
       padding: 10px !important;
@@ -781,33 +1414,43 @@
 
   /* Extra Small Phones (<= 360px) */
   @media (max-width: 360px) {
-    #music-floating-btn, #admin-floating-btn {
+    #admin-floating-btn {
       padding: 5px 9px !important;
       font-size: 0.68rem !important;
+    }
+    .countdown-unit {
+      min-width: 48px !important;
+      padding: 5px 6px !important;
+    }
+    .countdown-num {
+      font-size: 1.05rem !important;
     }
   }
 
   /* Tablets & Desktops (>= 768px) */
   @media (min-width: 768px) {
-    #music-floating-btn {
-      top: 20px;
-      left: 24px;
-      padding: 9px 18px;
-      font-size: 0.85rem;
-    }
     #admin-floating-btn {
       top: 20px;
       right: 24px;
       padding: 9px 18px;
       font-size: 0.85rem;
     }
+    .countdown-unit {
+      min-width: 74px;
+      padding: 10px 14px;
+    }
+    .countdown-num {
+      font-size: 1.65rem;
+    }
   }
 </style>
 
-<!-- Floating Music Button -->
-<div id="music-floating-btn" onclick="toggleWeddingMusic()" title="Play/Pause Wedding Music">
-  <span id="music-btn-icon">🔇</span> <span id="music-btn-label">Music Off</span>
-</div>
+<!-- Background Wedding Music Player (Aaj Sajeya - 0:22 Start) -->
+<audio id="wedding-audio" preload="auto" loop playsinline webkit-playsinline style="display:none;">
+  <source src="/audio/aaj_sajeya.mp3" type="audio/mpeg">
+  <source src="https://aac.saavncdn.com/055/e2e03a537936e0bad158bc2a2159ec42_sar_160.mp4" type="audio/mp4">
+  <source src="https://aac.saavncdn.com/055/e2e03a537936e0bad158bc2a2159ec42_96.mp4" type="audio/mp4">
+</audio>
 
 <!-- Floating Admin Trigger Button -->
 <div id="admin-floating-btn" onclick="openAdminModal()">
@@ -1032,92 +1675,435 @@
     });
   };
 
-  // ================= WEDDING MUSIC: "Aaj Sajeya" =================
+  // ================= WEDDING MUSIC: "Aaj Sajeya" (0:22 Start on Open) =================
   let weddingAudio = null;
   let isMusicPlaying = false;
+  let synthFallbackActive = false;
+  let synthOscs = [];
+  let synthCtx = null;
+  const CDN_SONG_URL = 'https://aac.saavncdn.com/055/e2e03a537936e0bad158bc2a2159ec42_sar_160.mp4';
+  const START_OFFSET_SECONDS = 22;
 
   function initWeddingAudio() {
+    if (weddingAudio) return weddingAudio;
+    weddingAudio = document.getElementById('wedding-audio');
     if (!weddingAudio) {
-      weddingAudio = new Audio('/audio/aaj_sajeya.mp3');
+      weddingAudio = document.createElement('audio');
+      weddingAudio.id = 'wedding-audio';
       weddingAudio.loop = true;
       weddingAudio.preload = 'auto';
+      weddingAudio.setAttribute('playsinline', '');
+      weddingAudio.setAttribute('webkit-playsinline', '');
+      weddingAudio.style.display = 'none';
 
-      weddingAudio.addEventListener('play', () => {
-        isMusicPlaying = true;
-        sessionStorage.setItem('weddingMusicPlaying', 'true');
-        updateMusicButtonUI();
-      });
+      const s1 = document.createElement('source');
+      s1.src = '/audio/aaj_sajeya.mp3';
+      s1.type = 'audio/mpeg';
+      weddingAudio.appendChild(s1);
 
-      weddingAudio.addEventListener('pause', () => {
+      const s2 = document.createElement('source');
+      s2.src = CDN_SONG_URL;
+      s2.type = 'audio/mp4';
+      weddingAudio.appendChild(s2);
+
+      document.body.appendChild(weddingAudio);
+    }
+
+    weddingAudio.loop = true;
+
+    // When metadata loads or time updates on CDN full stream, jump to 0:22
+    weddingAudio.addEventListener('loadedmetadata', () => {
+      const src = weddingAudio.currentSrc || weddingAudio.src || '';
+      if (src.includes('saavncdn.com') && weddingAudio.currentTime < START_OFFSET_SECONDS) {
+        try { weddingAudio.currentTime = START_OFFSET_SECONDS; } catch (e) {}
+      }
+    });
+
+    weddingAudio.addEventListener('play', () => {
+      isMusicPlaying = true;
+      sessionStorage.setItem('weddingMusicPlaying', 'true');
+    });
+
+    weddingAudio.addEventListener('pause', () => {
+      if (!synthFallbackActive) {
         isMusicPlaying = false;
         sessionStorage.setItem('weddingMusicPlaying', 'false');
-        updateMusicButtonUI();
-      });
+      }
+    });
 
-      weddingAudio.addEventListener('error', (e) => {
-        console.warn('[Wedding Audio error]', e);
-      });
-    }
+    weddingAudio.addEventListener('error', (e) => {
+      console.warn('[Wedding Audio error - switching to CDN/synth fallback]', e);
+      const src = weddingAudio.currentSrc || weddingAudio.src || '';
+      if (!src.includes('saavncdn.com')) {
+        weddingAudio.src = CDN_SONG_URL;
+        weddingAudio.load();
+        try { weddingAudio.currentTime = START_OFFSET_SECONDS; } catch (err) {}
+        if (isMusicPlaying) {
+          weddingAudio.play().catch(() => startSynthFallback());
+        }
+      } else {
+        startSynthFallback();
+      }
+    });
+
     return weddingAudio;
   }
 
-  function updateMusicButtonUI() {
-    const icon = document.getElementById('music-btn-icon');
-    const label = document.getElementById('music-btn-label');
-    const btn = document.getElementById('music-floating-btn');
-    if (icon) icon.textContent = isMusicPlaying ? '🎵' : '🔇';
-    if (label) label.textContent = isMusicPlaying ? 'Aaj Sajeya' : 'Music Off';
-    if (btn) {
-      if (isMusicPlaying) {
-        btn.classList.add('music-playing');
-        btn.setAttribute('title', 'Playing: Aaj Sajeya (Click to pause)');
-      } else {
-        btn.classList.remove('music-playing');
-        btn.setAttribute('title', 'Play: Aaj Sajeya (Click to play)');
-      }
+  function startSynthFallback() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      if (!synthCtx) synthCtx = new AudioCtx();
+      if (synthCtx.state === 'suspended') synthCtx.resume();
+      if (synthOscs.length > 0) return;
+
+      const notes = [293.66, 329.63, 369.99, 440.00, 493.88, 587.33];
+      const masterGain = synthCtx.createGain();
+      masterGain.gain.setValueAtTime(0.08, synthCtx.currentTime);
+      masterGain.connect(synthCtx.destination);
+
+      const osc = synthCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(notes[0], synthCtx.currentTime);
+      osc.connect(masterGain);
+      osc.start();
+      synthOscs.push(osc);
+
+      let step = 0;
+      const interval = setInterval(() => {
+        if (!synthFallbackActive || !synthCtx) {
+          clearInterval(interval);
+          return;
+        }
+        step = (step + 1) % notes.length;
+        osc.frequency.setTargetAtTime(notes[step], synthCtx.currentTime, 0.2);
+      }, 750);
+
+      synthFallbackActive = true;
+      isMusicPlaying = true;
+    } catch (e) {
+      console.warn('Synth error:', e);
     }
   }
 
-  window.toggleWeddingMusic = function() {
+  function playWeddingMusic() {
     const audio = initWeddingAudio();
-    if (isMusicPlaying) {
-      audio.pause();
-    } else {
-      audio.play().then(() => {
-        window.showRoyalToast('🎵 Playing: Aaj Sajeya');
-      }).catch(err => {
-        console.warn('Playback error:', err);
-      });
-    }
-  };
+    if (!audio) return;
+    isMusicPlaying = true;
+    sessionStorage.setItem('weddingMusicPlaying', 'true');
 
-  // Attempt autoplay or resume user state upon first interaction
-  function tryAutoPlayMusic() {
-    const state = sessionStorage.getItem('weddingMusicPlaying');
-    // If user previously played or if first time entering invitation
-    if (state !== 'false') {
-      const audio = initWeddingAudio();
-      audio.play().then(() => {
-        updateMusicButtonUI();
-      }).catch(() => {
-        // Autoplay policy prevented; user can click anytime or first touch will trigger
-        const onFirstUserTouch = () => {
-          if (sessionStorage.getItem('weddingMusicPlaying') !== 'false') {
-            audio.play().catch(() => {});
-          }
-          document.removeEventListener('click', onFirstUserTouch);
-          document.removeEventListener('touchstart', onFirstUserTouch);
-        };
-        document.addEventListener('click', onFirstUserTouch, { once: true });
-        document.addEventListener('touchstart', onFirstUserTouch, { once: true });
+    const p = audio.play();
+    if (p !== undefined) {
+      p.catch(err => {
+        console.warn('Playback blocked or failed, trying CDN / synth:', err);
+        const src = audio.currentSrc || audio.src || '';
+        if (!src.includes('saavncdn.com')) {
+          audio.src = CDN_SONG_URL;
+          audio.load();
+          try { audio.currentTime = START_OFFSET_SECONDS; } catch (e) {}
+          audio.play().catch(() => startSynthFallback());
+        } else {
+          startSynthFallback();
+        }
       });
     }
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', tryAutoPlayMusic);
-  } else {
-    tryAutoPlayMusic();
+  // Smooth Envelope Opening & Music Start
+  function initEnvelopeAndMusic() {
+    const openBtn = document.getElementById('open-invitation-btn');
+    const envelope = document.getElementById('envelope-overlay');
+    const wrapper = document.getElementById('envelope-card-wrapper');
+
+    if (!envelope) {
+      tryDirectAutoplay();
+      return;
+    }
+
+    const isAlreadyOpen = new URLSearchParams(window.location.search).get('open') === '1' ||
+                          window.location.pathname === '/open';
+
+    if (isAlreadyOpen) {
+      envelope.style.display = 'none';
+      tryDirectAutoplay();
+      return;
+    }
+
+    // Envelope is active:
+    // IMPORTANT: Do NOT play audio yet! The song starts ONLY when the user clicks/taps Open!
+    let opened = false;
+    function handleOpen(e) {
+      if (opened) return;
+      opened = true;
+      if (e) {
+        try { e.preventDefault(); e.stopPropagation(); } catch (err) {}
+      }
+
+      // 1. START SONG IMMEDIATELY ON USER PRESS
+      playWeddingMusic();
+
+      // 2. Animate Envelope Open
+      if (wrapper) {
+        wrapper.style.transform = 'scale(1.08) translateY(-24px)';
+        wrapper.style.opacity = '0';
+      }
+      if (envelope) {
+        envelope.style.opacity = '0';
+        envelope.style.transform = 'translateY(-100%)';
+        envelope.style.pointerEvents = 'none';
+        setTimeout(() => {
+          envelope.style.display = 'none';
+        }, 750);
+      }
+
+      // 3. Update URL to /open without reload
+      try {
+        if (window.history && window.history.pushState) {
+          window.history.pushState({ opened: true }, '', '/open');
+        }
+      } catch (err) {}
+    }
+
+    if (openBtn) {
+      openBtn.addEventListener('click', handleOpen);
+      openBtn.addEventListener('touchend', handleOpen, { passive: false });
+    }
+
+    const seal = envelope.querySelector('div[style*="seal-pulse"]');
+    if (seal) {
+      seal.style.cursor = 'pointer';
+      seal.addEventListener('click', handleOpen);
+    }
+  }
+
+  function tryDirectAutoplay() {
+    playWeddingMusic();
+    const unlockEvents = ['click', 'touchstart', 'touchend', 'scroll'];
+    const unlock = () => {
+      const audio = initWeddingAudio();
+      if (audio && audio.paused) {
+        playWeddingMusic();
+      }
+      unlockEvents.forEach(evt => {
+        window.removeEventListener(evt, unlock, true);
+        document.removeEventListener(evt, unlock, true);
+      });
+    };
+    unlockEvents.forEach(evt => {
+      window.addEventListener(evt, unlock, { capture: true, once: true, passive: true });
+      document.addEventListener(evt, unlock, { capture: true, once: true, passive: true });
+    });
+  }
+
+  // Live Wedding Countdown Timer (Nov 25, 2026 5:00 PM IST)
+  function initCountdownTimer() {
+    const container = document.getElementById('live-wedding-countdown');
+    if (!container) return;
+    const weddingTarget = new Date('2026-11-25T17:00:00+05:30').getTime();
+
+    function updateTimer() {
+      const now = Date.now();
+      const diff = weddingTarget - now;
+      if (diff <= 0) {
+        container.innerHTML = '<div style="color:#f2c06e;font-weight:700;font-size:1.1rem;">🎉 The Wedding Celebration is Here! 🎉</div>';
+        return;
+      }
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const mins = Math.floor((diff / (1000 * 60)) % 60);
+      const secs = Math.floor((diff / 1000) % 60);
+
+      container.innerHTML = `
+        <div class="countdown-grid">
+          <div class="countdown-unit">
+            <div class="countdown-num">${days}</div>
+            <div class="countdown-lbl">Days</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num">${String(hours).padStart(2, '0')}</div>
+            <div class="countdown-lbl">Hours</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num">${String(mins).padStart(2, '0')}</div>
+            <div class="countdown-lbl">Mins</div>
+          </div>
+          <div class="countdown-unit">
+            <div class="countdown-num">${String(secs).padStart(2, '0')}</div>
+            <div class="countdown-lbl">Secs</div>
+          </div>
+        </div>
+      `;
+    }
+
+    updateTimer();
+    setInterval(updateTimer, 1000);
+  }
+
+  // Interactive 3D Photo Gallery & Lightbox
+  function initPhotoGallery() {
+    const photos = [
+      'https://cdn.chungdoi.com/uploads/9481b212-b7fc-4352-90bc-a73718a55d9c.jpg',
+      'https://cdn.chungdoi.com/uploads/3bb461dc-8e65-4dae-bbdd-5c256ee26d4a.jpg',
+      'https://cdn.chungdoi.com/uploads/00ac0131-dbac-4dff-9ad6-2b012e9dff2f.jpg'
+    ];
+    let activeIdx = 0;
+    let autoPlayInterval = null;
+
+    const cards = Array.from(document.querySelectorAll('.gallery-card-item'));
+    const dots = Array.from(document.querySelectorAll('.gallery-dot'));
+    const prevBtn = document.getElementById('gallery-prev-btn');
+    const nextBtn = document.getElementById('gallery-next-btn');
+    const stage = document.getElementById('gallery-carousel-stage');
+
+    const dialog = document.getElementById('gallery-lightbox-modal');
+    const mainImg = document.getElementById('lightbox-main-img');
+    const counter = document.getElementById('lightbox-counter');
+    const lbPrev = document.getElementById('lightbox-prev-btn');
+    const lbNext = document.getElementById('lightbox-next-btn');
+    const thumbs = Array.from(document.querySelectorAll('.lightbox-thumb'));
+
+    if (!cards.length) return;
+
+    function renderGallery() {
+      const total = cards.length;
+      const isNarrow = window.innerWidth < 400;
+      const sideOffset = isNarrow ? '46%' : '60%';
+      cards.forEach((card, i) => {
+        const offset = (i - activeIdx + total) % total;
+        if (offset === 0) {
+          card.style.transform = 'translateX(0%) translateZ(0px) rotateY(0deg) scale(1)';
+          card.style.opacity = '1';
+          card.style.zIndex = '100';
+          card.classList.add('ring-2', 'ring-white/30');
+        } else if (offset === 1) {
+          card.style.transform = `translateX(${sideOffset}) translateZ(-150px) rotateY(45deg) scale(0.85)`;
+          card.style.opacity = '0.75';
+          card.style.zIndex = '99';
+          card.classList.remove('ring-2', 'ring-white/30');
+        } else {
+          card.style.transform = `translateX(-${sideOffset}) translateZ(-150px) rotateY(-45deg) scale(0.85)`;
+          card.style.opacity = '0.75';
+          card.style.zIndex = '99';
+          card.classList.remove('ring-2', 'ring-white/30');
+        }
+      });
+
+      dots.forEach((dot, i) => {
+        if (i === activeIdx) {
+          dot.className = 'gallery-dot rounded-full transition-all duration-300 w-6 h-2 bg-current opacity-70 cursor-pointer';
+        } else {
+          dot.className = 'gallery-dot rounded-full transition-all duration-300 w-2 h-2 bg-current opacity-25 hover:opacity-40 cursor-pointer';
+        }
+      });
+
+      if (mainImg) mainImg.src = photos[activeIdx];
+      if (counter) counter.textContent = (activeIdx + 1) + ' / ' + total;
+      thumbs.forEach((thumb, i) => {
+        if (i === activeIdx) {
+          thumb.style.outline = '2px solid #f2c06e';
+          thumb.style.outlineOffset = '2px';
+          thumb.classList.remove('opacity-60');
+          thumb.classList.add('scale-105', 'shadow-lg');
+        } else {
+          thumb.style.outline = 'none';
+          thumb.classList.add('opacity-60');
+          thumb.classList.remove('scale-105', 'shadow-lg');
+        }
+      });
+    }
+
+    function goTo(index) {
+      activeIdx = (index + photos.length) % photos.length;
+      renderGallery();
+    }
+
+    function resetAutoPlay() {
+      clearInterval(autoPlayInterval);
+      autoPlayInterval = setInterval(() => {
+        if (!dialog || !dialog.open) {
+          goTo(activeIdx + 1);
+        }
+      }, 4500);
+    }
+
+    if (prevBtn) {
+      prevBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goTo(activeIdx - 1);
+        resetAutoPlay();
+      });
+    }
+
+    if (nextBtn) {
+      nextBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goTo(activeIdx + 1);
+        resetAutoPlay();
+      });
+    }
+
+    dots.forEach((dot, i) => {
+      dot.addEventListener('click', () => {
+        goTo(i);
+        resetAutoPlay();
+      });
+    });
+
+    cards.forEach((card, i) => {
+      card.addEventListener('click', () => {
+        if (i !== activeIdx) {
+          goTo(i);
+          resetAutoPlay();
+        } else if (dialog && typeof dialog.showModal === 'function') {
+          renderGallery();
+          dialog.showModal();
+        }
+      });
+    });
+
+    if (lbPrev) {
+      lbPrev.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goTo(activeIdx - 1);
+      });
+    }
+
+    if (lbNext) {
+      lbNext.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goTo(activeIdx + 1);
+      });
+    }
+
+    thumbs.forEach((thumb, i) => {
+      thumb.addEventListener('click', (e) => {
+        e.stopPropagation();
+        goTo(i);
+      });
+    });
+
+    // Touch swipe support on mobile
+    if (stage) {
+      let touchStartX = 0;
+      stage.addEventListener('touchstart', (e) => {
+        if (e.touches && e.touches[0]) {
+          touchStartX = e.touches[0].clientX;
+        }
+      }, { passive: true });
+      stage.addEventListener('touchend', (e) => {
+        if (e.changedTouches && e.changedTouches[0]) {
+          const dx = e.changedTouches[0].clientX - touchStartX;
+          if (Math.abs(dx) > 40) {
+            goTo(dx < 0 ? activeIdx + 1 : activeIdx - 1);
+            resetAutoPlay();
+          }
+        }
+      }, { passive: true });
+    }
+
+    window.addEventListener('resize', renderGallery);
+    renderGallery();
+    resetAutoPlay();
   }
 
   function getDeletedIds() {
@@ -1189,7 +2175,7 @@
 
   // Wire up existing RSVP button on the card (valid CSS selector)
   function attachRsvpListeners() {
-    const rsvpBtns = document.querySelectorAll('[data-landing-screenshot-id="invite-rsvp"] button');
+    const rsvpBtns = document.querySelectorAll('[data-landing-screenshot-id="invite-rsvp"] button, #confirm-attendance-btn');
     rsvpBtns.forEach(btn => {
       btn.onclick = function(e) {
         e.preventDefault();
@@ -1197,25 +2183,6 @@
         openGuestRsvpModal();
       };
     });
-  }
-
-  // Smooth Envelope Open transition
-  function attachEnvelopeListener() {
-    const openBtn = document.getElementById('open-invitation-btn');
-    const wrapper = document.getElementById('envelope-card-wrapper');
-    if (openBtn) {
-      openBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        sessionStorage.setItem('weddingMusicPlaying', 'true');
-        if (wrapper) {
-          wrapper.style.transform = 'scale(1.06) translateY(-16px)';
-          wrapper.style.opacity = '0';
-        }
-        setTimeout(() => {
-          window.location.href = '/open';
-        }, 320);
-      });
-    }
   }
 
   // Check login state
@@ -1442,7 +2409,7 @@
     closeGuestRsvpModal();
     document.getElementById('public-rsvp-form').reset();
     toggleGuestCount('yes');
-    showRoyalToast('Thank you, ' + item.name + '! Your RSVP has been recorded.');
+    showRoyalToast('Thank you, ' + item.name + '! Your RSVP has been confirmed. We look forward to celebrating with you!');
   };
 
   function escapeHtml(str) {
@@ -1453,7 +2420,9 @@
   document.addEventListener('DOMContentLoaded', () => {
     checkAdminState();
     attachRsvpListeners();
-    attachEnvelopeListener();
+    initCountdownTimer();
+    initPhotoGallery();
+    initEnvelopeAndMusic();
   });
 
   window.addEventListener('load', () => {

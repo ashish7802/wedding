@@ -150,18 +150,42 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // 3. Local static files with CORRECT MIME TYPES
+  // 3. Local static files with CORRECT MIME TYPES and Range support
   const safeRelPath = pathname.replace(/^\/+/, '');
   const localPath = path.join(__dirname, safeRelPath);
   if (localPath.startsWith(__dirname) && fs.existsSync(localPath) && fs.statSync(localPath).isFile()) {
     const ext = path.extname(localPath).toLowerCase();
     const mimeType = MIME_TYPES[ext] || 'application/octet-stream';
-    res.writeHead(200, {
-      'Content-Type': mimeType,
-      'Cache-Control': 'public, max-age=31536000'
-    });
-    fs.createReadStream(localPath).pipe(res);
-    return;
+    const stat = fs.statSync(localPath);
+    const fileSize = stat.size;
+    const range = req.headers.range;
+
+    if (range) {
+      const parts = range.replace(/bytes=/, '').split('-');
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+      const chunksize = (end - start) + 1;
+      const file = fs.createReadStream(localPath, { start, end });
+      res.writeHead(206, {
+        'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': mimeType,
+        'Access-Control-Allow-Origin': '*'
+      });
+      file.pipe(res);
+      return;
+    } else {
+      res.writeHead(200, {
+        'Content-Length': fileSize,
+        'Accept-Ranges': 'bytes',
+        'Content-Type': mimeType,
+        'Cache-Control': 'public, max-age=31536000',
+        'Access-Control-Allow-Origin': '*'
+      });
+      fs.createReadStream(localPath).pipe(res);
+      return;
+    }
   }
 
   // 4. Proxy Next.js assets to upstream ChungDoi as fallback
