@@ -6,7 +6,6 @@ const path = require('path');
 const PORT = Number(process.env.PORT) || 3000;
 const HOST = '0.0.0.0';
 const UPSTREAM = 'https://chungdoi.com';
-const RSVPS_FILE = path.join(__dirname, 'rsvps.json');
 
 const MIME_TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -26,27 +25,7 @@ const MIME_TYPES = {
   '.m4a': 'audio/mp4'
 };
 
-function getRsvps() {
-  try {
-    if (fs.existsSync(RSVPS_FILE)) {
-      const parsed = JSON.parse(fs.readFileSync(RSVPS_FILE, 'utf8'));
-      if (Array.isArray(parsed)) return parsed;
-    }
-  } catch (e) {
-    console.error('Error reading rsvps.json:', e);
-  }
-  return [];
-}
-
-function saveRsvps(data) {
-  try {
-    fs.writeFileSync(RSVPS_FILE, JSON.stringify(data, null, 2), 'utf8');
-  } catch (e) {
-    console.error('Error writing rsvps.json:', e);
-  }
-}
-
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   const urlObj = new URL(req.url, `http://localhost:${PORT}`);
   const pathname = decodeURIComponent(urlObj.pathname);
   const isOpen = urlObj.searchParams.get('open') === '1';
@@ -100,68 +79,6 @@ const server = http.createServer((req, res) => {
       response.end(JSON.stringify({ error: 'RSVP service temporarily unavailable. Please try again.' }));
     }
   }
-  // 1. API Routes for RSVP Management
-  if ((pathname === '/api/rsvps' || pathname === '/api/rsvp') && req.method === 'GET') {
-    res.writeHead(200, {
-      'Content-Type': 'application/json; charset=utf-8',
-      'Cache-Control': 'no-store, no-cache, must-revalidate'
-    });
-    res.end(JSON.stringify(getRsvps()));
-    return;
-  }
-
-  if ((pathname === '/api/rsvp' || pathname === '/api/rsvps') && req.method === 'POST') {
-    let body = '';
-    req.on('data', chunk => { body += chunk; });
-    req.on('end', () => {
-      try {
-        const parsed = body ? JSON.parse(body) : {};
-        const item = {
-          id: parsed.id || ('rsvp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6)),
-          name: (parsed.name || 'Anonymous Guest').toString().trim(),
-          attending: parsed.attending === 'no' ? 'no' : 'yes',
-          count: parsed.attending === 'no' ? 0 : Math.max(1, parseInt(parsed.count, 10) || 1),
-          message: (parsed.message || '').toString().trim(),
-          createdAt: parsed.createdAt || new Date().toISOString()
-        };
-        const list = getRsvps();
-        const existingIdx = list.findIndex(r => String(r.id) === String(item.id));
-        if (existingIdx !== -1) {
-          list[existingIdx] = item;
-        } else {
-          list.unshift(item);
-        }
-        saveRsvps(list);
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.end(JSON.stringify({ success: true, item, list }));
-      } catch (err) {
-        res.writeHead(400, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ error: err.message }));
-      }
-    });
-    return;
-  }
-
-  if (
-    (pathname.startsWith('/api/rsvp/') || pathname.startsWith('/api/rsvps/') || pathname === '/api/rsvp' || pathname === '/api/rsvps') &&
-    req.method === 'DELETE'
-  ) {
-    let id = urlObj.searchParams.get('id');
-    if (!id && pathname.startsWith('/api/rsvp/')) {
-      id = pathname.replace('/api/rsvp/', '');
-    } else if (!id && pathname.startsWith('/api/rsvps/')) {
-      id = pathname.replace('/api/rsvps/', '');
-    }
-    let list = getRsvps();
-    if (id) {
-      list = list.filter(r => String(r.id) !== String(id));
-      saveRsvps(list);
-    }
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ success: true, list }));
-    return;
-  }
-
   // 2. Root / Invitation HTML paths
   if (
     pathname === '/' ||
@@ -266,7 +183,6 @@ server.listen(PORT, HOST, () => {
   console.log(`Wedding invitation server running at:`);
   console.log(`👉 http://localhost:${PORT}`);
   console.log(`👉 http://localhost:${PORT}/open  (Direct to opened card)`);
-  console.log(`Admin credentials: user 'admin' | pass 'adminsanjeev##'`);
   console.log(`=======================================================`);
 });
 
