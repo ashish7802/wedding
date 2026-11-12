@@ -62,6 +62,44 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Shared Supabase RSVP API for local development and Vercel parity.
+  if (pathname === '/api/rsvps' || pathname === '/api/rsvp' || pathname.startsWith('/api/rsvps/') || pathname.startsWith('/api/rsvp/')) {
+    let query = urlObj.search;
+    if (!query && (pathname.startsWith('/api/rsvp/') || pathname.startsWith('/api/rsvps/'))) {
+      const id = pathname.replace(/^\/api\/rsvps?\//, '');
+      if (id) query = '?id=' + encodeURIComponent(id);
+    }
+    let rawBody = '';
+    if (req.method === 'POST') {
+      req.on('data', chunk => { rawBody += chunk; });
+      req.on('end', async () => { await forwardRsvpRequest(req, res, query, rawBody); });
+      return;
+    }
+    if (req.method === 'GET' || req.method === 'DELETE') {
+      await forwardRsvpRequest(req, res, query);
+      return;
+    }
+    res.writeHead(405, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ error: 'Method not allowed' }));
+    return;
+  }
+
+  async function forwardRsvpRequest(request, response, query, body) {
+    const supabaseUrl = 'https://wlafthdxxloueokfqjvu.supabase.co';
+    const publishableKey = 'sb_publishable_ec5TaTTISoZzgZ3sl-Igzg_8Xx77BJB';
+    const headers = { apikey: publishableKey, 'Content-Type': 'application/json' };
+    if (request.headers.authorization) headers.Authorization = request.headers.authorization;
+    try {
+      const upstream = await fetch(supabaseUrl + '/functions/v1/wedding-rsvps' + (query || ''), { method: request.method, headers, body });
+      const text = await upstream.text();
+      response.writeHead(upstream.status, { 'Content-Type': upstream.headers.get('content-type') || 'application/json', 'Cache-Control': 'no-store' });
+      response.end(text);
+    } catch (error) {
+      console.error('RSVP upstream request failed:', error);
+      response.writeHead(502, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify({ error: 'RSVP service temporarily unavailable. Please try again.' }));
+    }
+  }
   // 1. API Routes for RSVP Management
   if ((pathname === '/api/rsvps' || pathname === '/api/rsvp') && req.method === 'GET') {
     res.writeHead(200, {
