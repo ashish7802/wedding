@@ -2144,33 +2144,30 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     } catch(e) {}
   }
 
-  // Smart Merge Sync between Server and LocalStorage
-  window.fetchAllRsvps = async function() {
-    const localList = getLocalRsvps();
-    const deletedIds = new Set(getDeletedIds().map(String));
-    try {
-      const res = await fetch('/api/rsvps', { cache: 'no-store' });
-      if (res.ok) {
-        const serverData = await res.json();
-        if (Array.isArray(serverData)) {
-          const mergedMap = new Map();
-          serverData.forEach(item => {
-            if (item && item.id && !deletedIds.has(String(item.id))) {
-              mergedMap.set(String(item.id), item);
-            }
-          });
-          localList.forEach(item => {
-            if (item && item.id && !deletedIds.has(String(item.id)) && !mergedMap.has(String(item.id))) {
-              mergedMap.set(String(item.id), item);
-            }
-          });
-          const merged = Array.from(mergedMap.values());
-          saveLocalRsvps(merged);
-          return merged;
-        }
+  // Shared database is the single source of truth; browser-local RSVP lists are not merged.
+  async function rsvpApiRequest(path = '', options = {}) {
+    const token = sessionStorage.getItem('weddingAdminToken');
+    const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+    if (token) headers.Authorization = 'Bearer ' + token;
+    const response = await fetch('/api/rsvps' + path, { ...options, headers, cache: 'no-store' });
+    let payload = {};
+    try { payload = await response.json(); } catch (_) {}
+    if (!response.ok) {
+      if (response.status === 401) {
+        sessionStorage.removeItem('weddingAdminToken');
+        sessionStorage.removeItem('isAdmin');
+    sessionStorage.removeItem('weddingAdminToken');
+        checkAdminState();
       }
-    } catch(e) {}
-    return localList.filter(item => !deletedIds.has(String(item.id)));
+      throw new Error(payload.error || 'RSVP service unavailable. Please try again.');
+    }
+    return payload;
+  }
+
+  window.fetchAllRsvps = async function() {
+    const payload = await rsvpApiRequest('', { method: 'GET' });
+    if (!Array.isArray(payload)) throw new Error('Unexpected RSVP response from server.');
+    return payload;
   };
 
   // Wire up existing RSVP button on the card (valid CSS selector)
@@ -2187,7 +2184,7 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
   // Check login state
   window.checkAdminState = function() {
-    const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+    const isAdmin = Boolean(sessionStorage.getItem('weddingAdminToken'));
     const label = document.getElementById('admin-btn-label');
     if (label) {
       label.innerText = isAdmin ? 'Admin Panel' : 'Admin Login';
@@ -2195,7 +2192,7 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
   };
 
   window.openAdminModal = function() {
-    const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+    const isAdmin = Boolean(sessionStorage.getItem('weddingAdminToken'));
     if (isAdmin) {
       openAdminDashboard();
     } else {
@@ -2208,24 +2205,30 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     document.getElementById('admin-login-error').style.display = 'none';
   };
 
-  window.handleAdminLogin = function(e) {
+  window.handleAdminLogin = async function(e) {
     e.preventDefault();
     const user = document.getElementById('admin-user-input').value.trim();
-    const pass = document.getElementById('admin-pass-input').value.trim();
-
-    if (user === 'admin' && pass === 'adminsanjeev##') {
+    const pass = document.getElementById('admin-pass-input').value;
+    const errorEl = document.getElementById('admin-login-error');
+    try {
+      const result = await rsvpApiRequest('', { method: 'POST', body: JSON.stringify({ action: 'login', username: user, password: pass }) });
+      if (!result.token) throw new Error('Login response did not include a session.');
+      sessionStorage.setItem('weddingAdminToken', result.token);
       sessionStorage.setItem('isAdmin', 'true');
       checkAdminState();
       closeAdminLoginModal();
-      openAdminDashboard();
+      document.getElementById('admin-pass-input').value = '';
+      await openAdminDashboard();
       showRoyalToast('Welcome to the Guest RSVP Admin Dashboard!');
-    } else {
-      document.getElementById('admin-login-error').style.display = 'block';
+    } catch (err) {
+      errorEl.textContent = err.message || 'Invalid username or password.';
+      errorEl.style.display = 'block';
     }
   };
 
   window.adminLogout = function() {
     sessionStorage.removeItem('isAdmin');
+    sessionStorage.removeItem('weddingAdminToken');
     checkAdminState();
     closeAdminDashboard();
     showRoyalToast('Logged out successfully.');
@@ -2233,7 +2236,12 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
   window.openAdminDashboard = async function() {
     document.getElementById('admin-dashboard-modal').classList.add('active');
-    await renderAdminTable();
+    try {
+      await renderAdminTable();
+    } catch (err) {
+      document.getElementById('admin-dashboard-modal').classList.remove('active');
+      showRoyalToast(err.message || 'Unable to load the guest list. Please sign in again.');
+    }
   };
 
   window.closeAdminDashboard = function() {
@@ -2241,7 +2249,14 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
   };
 
   window.renderAdminTable = async function() {
-    const list = await fetchAllRsvps();
+    let list;
+    try {
+      list = await fetchAllRsvps();
+    } catch (err) {
+      const failedBody = document.getElementById('admin-guest-tbody');
+      if (failedBody) failedBody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:20px;color:#ff8a80;">Unable to load guest responses. Please log in again.</td></tr>';
+      throw err;
+    }
     const query = (document.getElementById('admin-search')?.value || '').toLowerCase();
     const tbody = document.getElementById('admin-guest-tbody');
     if (!tbody) return;
@@ -2285,17 +2300,13 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
   window.deleteRsvp = async function(id) {
     const confirmed = await showRoyalConfirm('Are you sure you want to delete this guest entry?');
     if (!confirmed) return;
-
-    addDeletedId(id);
-    let list = getLocalRsvps().filter(r => String(r.id) !== String(id));
-    saveLocalRsvps(list);
-
     try {
-      await fetch('/api/rsvps?id=' + encodeURIComponent(id), { method: 'DELETE' });
-    } catch(e) {}
-
-    await renderAdminTable();
-    showRoyalToast('Guest entry removed.');
+      await rsvpApiRequest('?id=' + encodeURIComponent(id), { method: 'DELETE' });
+      await renderAdminTable();
+      showRoyalToast('Guest entry removed.');
+    } catch (err) {
+      showRoyalToast(err.message || 'Unable to delete this guest entry.');
+    }
   };
 
   window.openAddGuestModal = function() {
@@ -2310,31 +2321,22 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     e.preventDefault();
     const attending = document.getElementById('m-attending').value;
     const item = {
-      id: 'rsvp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
       name: document.getElementById('m-name').value.trim(),
-      attending: attending,
+      attending,
       count: attending === 'yes' ? (parseInt(document.getElementById('m-count').value, 10) || 1) : 0,
       message: document.getElementById('m-message').value.trim(),
-      createdAt: new Date().toISOString()
+      admin: true
     };
-
-    let list = getLocalRsvps();
-    list.unshift(item);
-    saveLocalRsvps(list);
-
     try {
-      await fetch('/api/rsvps', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(item)
-      });
-    } catch(e) {}
-
-    const form = document.getElementById('manual-add-guest-form');
-    if (form) form.reset();
-    closeAddGuestModal();
-    await renderAdminTable();
-    showRoyalToast('Guest ' + item.name + ' added successfully!');
+      await rsvpApiRequest('', { method: 'POST', body: JSON.stringify(item) });
+      const form = document.getElementById('manual-add-guest-form');
+      if (form) form.reset();
+      closeAddGuestModal();
+      await renderAdminTable();
+      showRoyalToast('Guest ' + item.name + ' added successfully!');
+    } catch (err) {
+      showRoyalToast(err.message || 'Unable to save this guest entry.');
+    }
   };
 
   window.exportCsv = async function() {
@@ -2386,30 +2388,24 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     e.preventDefault();
     const attending = document.getElementById('g-attending').value;
     const item = {
-      id: 'rsvp-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
       name: document.getElementById('g-name').value.trim(),
-      attending: attending,
+      attending,
       count: attending === 'yes' ? (parseInt(document.getElementById('g-count').value, 10) || 1) : 0,
-      message: document.getElementById('g-message').value.trim(),
-      createdAt: new Date().toISOString()
+      message: document.getElementById('g-message').value.trim()
     };
-
-    let list = getLocalRsvps();
-    list.unshift(item);
-    saveLocalRsvps(list);
-
+    const submitButton = document.querySelector('#public-rsvp-form button[type="submit"]');
+    if (submitButton) submitButton.disabled = true;
     try {
-      await fetch('/api/rsvps', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(item)
-      });
-    } catch(err) {}
-
-    closeGuestRsvpModal();
-    document.getElementById('public-rsvp-form').reset();
-    toggleGuestCount('yes');
-    showRoyalToast('Thank you, ' + item.name + '! Your RSVP has been confirmed. We look forward to celebrating with you!');
+      await rsvpApiRequest('', { method: 'POST', body: JSON.stringify(item) });
+      closeGuestRsvpModal();
+      document.getElementById('public-rsvp-form').reset();
+      toggleGuestCount('yes');
+      showRoyalToast('Thank you, ' + item.name + '! Your RSVP has been confirmed. We look forward to celebrating with you!');
+    } catch (err) {
+      showRoyalToast(err.message || 'Your RSVP could not be saved. Please try again.');
+    } finally {
+      if (submitButton) submitButton.disabled = false;
+    }
   };
 
   function escapeHtml(str) {
