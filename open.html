@@ -1574,9 +1574,6 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
 
 <script id="wedding-admin-and-rsvp-logic">
 (function() {
-  const STORAGE_KEY = 'wedding_guest_rsvps';
-  const DELETED_KEY = 'wedding_deleted_rsvp_ids';
-
   // Royal Toast Notification (replaces window.alert)
   window.showRoyalToast = function(message) {
     const container = document.getElementById('royal-toast-container');
@@ -2020,44 +2017,6 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
     resetAutoPlay();
   }
 
-  function getDeletedIds() {
-    try {
-      const raw = localStorage.getItem(DELETED_KEY);
-      if (raw) return JSON.parse(raw);
-    } catch (e) {}
-    return [];
-  }
-
-  function addDeletedId(id) {
-    try {
-      const list = getDeletedIds();
-      if (!list.includes(String(id))) {
-        list.push(String(id));
-        localStorage.setItem(DELETED_KEY, JSON.stringify(list));
-      }
-    } catch (e) {}
-  }
-
-  function getLocalRsvps() {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored !== null) {
-        const parsed = JSON.parse(stored);
-        if (Array.isArray(parsed)) return parsed;
-      }
-    } catch(e) {}
-    return [
-      { id: '1', name: 'Dr. Rajesh & Family', attending: 'yes', count: 4, message: 'Heartiest congratulations to Dr. Shubhanil & Dr. Nidhi!', createdAt: '2026-11-01T10:00:00.000Z' },
-      { id: '2', name: 'Pooja Verma', attending: 'yes', count: 2, message: 'Excited to attend the wedding in Lucknow!', createdAt: '2026-11-01T11:30:00.000Z' }
-    ];
-  }
-
-  function saveLocalRsvps(list) {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    } catch(e) {}
-  }
-
   // Shared database is the single source of truth; browser-local RSVP lists are not merged.
   async function rsvpApiRequest(path = '', options = {}) {
     const token = sessionStorage.getItem('weddingAdminToken');
@@ -2070,7 +2029,6 @@ Add- In Front Of South City, Police Chowki, Raebareli Road, Lucknow,Up</span></d
       if (response.status === 401) {
         sessionStorage.removeItem('weddingAdminToken');
         sessionStorage.removeItem('isAdmin');
-    sessionStorage.removeItem('weddingAdminToken');
         checkAdminState();
       }
       throw new Error(payload.error || 'RSVP service unavailable. Please try again.');
